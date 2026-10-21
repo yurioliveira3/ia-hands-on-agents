@@ -32,7 +32,7 @@ Servers do `.mcp.json` (um por destino/função):
 
 ## Sequência ao vivo
 
-| Passo | O que você digita | O que aparece na tela |
+| Passo | O que o dev digita | O que aparece na tela |
 |---|---|---|
 | 1 (~1 min) | abrir `claude` (ou `opencode`) na pasta, rodar `/mcp` | os 3 servers conectados surgem sozinhos |
 | 2 (~1,5 min) | "Analise reclamacoes.csv e grave `resumo.md` na pasta com as principais categorias" | o server filesystem escrevendo um arquivo que fica visível no editor |
