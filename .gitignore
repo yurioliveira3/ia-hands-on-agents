@@ -1,0 +1,52 @@
+# --- credenciais / segredos ---
+# nunca sobem para o GitHub
+.env
+.env.*
+!.env.example
+*.key
+*token*
+!token*.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.python-version
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+*.nbconvert/
+
+# --- dados e artefatos gerados na demo (cada um gera o seu) ---
+*.sqlite
+*.sqlite3
+*.db
+resumo.md
+export/
+
+# --- fallbacks e gravações ---
+recordings/
+*.cast
+*.mp4
+*.mov
+
+# --- node / npx (demo-2) ---
+node_modules/
+
+# --- editors / OS ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# --- caches de ferramentas e testes ---
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/

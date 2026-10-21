@@ -1,0 +1,19 @@
+texto,categoria
+"O rastreador do pedido não atualiza há duas semanas e nada chega",entrega
+"Cobraram o frete duas vezes na minha fatura do cartão",cobranca
+"O produto chegou com a embalagem amassada e sem o cabo prometido",produto
+"O atendente desligou o telefone na minha cara depois de 40 minutos de fila",atendimento
+"O aplicativo trava na tela de pagamento e não deixa fechar o pedido",app
+"No site dizia 3 dias úteis e já vai na terceira semana sem entrega",entrega
+"Fui cobrado pelo plano premium sem nunca ter ativado",cobranca
+"A bateria do fone dura menos de uma hora, não bate com o anúncio",produto
+"O suporte do chat fica recitando o mesmo script copiado e colado",atendimento
+"Depois da última atualização o app nem abre, fica na tela de carregamento",app
+"Meu pedido voltou pro remetente sem aviso e sem eu ter pedido",entrega
+"O desconto de 20% anunciado não aparece no checkout e cobraram valor cheio",cobranca
+"O fone chegou riscado e sem manual, parece produto de devolução",produto
+"Três e-mails e dois telefones depois ninguém respondeu meu chamado de garantia",atendimento
+"Não consigo cadastrar o cartão novo, o app dá erro genérico toda hora",app
+"O atendente confirmou o reembolso do produto que nunca chegou e o sistema segue mandando boleto novo",entrega
+"O desconto do cupom do app sumiu no checkout e a correção prometida pelo atendente não chegou até hoje",cobranca
+"A segunda parcela do pedido feito pelo app saiu mais cara que a acordada no carrinho",cobranca

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" font-family="Menlo, Consolas, 'DejaVu Sans Mono', monospace">
+  <title>Mapa de camadas: Engenharia de contexto dentro do laço, do catálogo MCP e da armação do agente</title>
+
+  <rect x="20" y="20" width="1160" height="580" fill="#16171B" stroke="#3F3F46" stroke-width="2"/>
+  <text x="52" y="52" font-size="20" font-weight="bold" letter-spacing="1" fill="#8F8FFF">SISTEMA DE ENTREGA COM LLM</text>
+
+  <rect x="52" y="68" width="1096" height="486" fill="#232329" stroke="#C9C5C0" stroke-width="1.5"/>
+  <text x="76" y="100" font-size="16" font-weight="bold" letter-spacing="1" fill="#E4E4E7">ARMAÇÃO DO AGENTE (HARNESS)</text>
+  <rect x="690" y="84" width="430" height="36" fill="#0B1220" stroke="#8F8FFF" stroke-width="1"/>
+  <text x="905" y="107" font-size="14" font-weight="bold" letter-spacing="1" fill="#FFFFFF" text-anchor="middle">CLAUDE CODE · CODEX · OPENCODE</text>
+  <text x="1100" y="546" font-size="15" fill="#E4E4E7" text-anchor="end">permissões · segredos (.env) · executores</text>
+
+  <rect x="140" y="134" width="920" height="390" fill="#2B2B33" stroke="#8F8FFF" stroke-width="1.2"/>
+  <text x="164" y="166" font-size="15" font-weight="bold" letter-spacing="1" fill="#E4E4E7">ORQUESTRAÇÃO · DEMO 2</text>
+  <text x="1012" y="510" font-size="15" fill="#E4E4E7" text-anchor="end">catálogo padrão (MCP) · filesystem · sqlite · fetch</text>
+
+  <rect x="232" y="200" width="736" height="276" fill="#232329" stroke="#C9C5C0" stroke-width="1.2"/>
+  <text x="256" y="232" font-size="15" font-weight="bold" letter-spacing="1" fill="#E4E4E7">LAÇO DO AGENTE · CAMADA 3</text>
+  <text x="924" y="462" font-size="15" fill="#E4E4E7" text-anchor="end">decidir · agir · observar · responder (run_agent à mão)</text>
+
+  <rect x="324" y="264" width="552" height="172" fill="#3D9E90" stroke="#2DD4BF" stroke-width="1.2"/>
+  <text x="348" y="296" font-size="15" font-weight="bold" letter-spacing="1" fill="#101F1C">ENGENHARIA DE CONTEXTO · CAMADAS 1 E 2</text>
+  <rect x="368" y="312" width="330" height="32" fill="#8F8FFF"/>
+  <text x="533" y="333" font-size="13" font-weight="bold" letter-spacing="1" fill="#101F1C" text-anchor="middle">PROMPT · EXEMPLOS · PARÂMETROS</text>
+  <text x="856" y="418" font-size="15" fill="#101F1C" text-anchor="end">zero-shot · few-shot · temperature</text>
+
+  <text x="1148" y="586" font-size="15" fill="#A1A1AA" text-anchor="end">eval-driven development (bônus) · repetibilidade · custo</text>
+</svg>
