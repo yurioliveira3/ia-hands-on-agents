@@ -18,9 +18,12 @@ Servers do `.mcp.json` (um por destino/função):
    python via pip: `pip install mcp-server-fetch mcp-server-sqlite`. Os
    comandos `mcp-server-fetch` e `mcp-server-sqlite` precisam ficar no
    PATH (instalar com `pip install --user` e verificar com `which`).
-2. Trocar `/ABS/ATE/O/PASTA/DA/DEMO-2` no `.mcp.json` pelo caminho real.
-3. Se o cliente for Claude Code: o `.mcp.json` na raiz do projeto é lido
-   automaticamente ao iniciar `claude` dentro dessa pasta.
+2. Rodar `make demo2-config` na raiz do projeto: gera o
+   `demo-2/.mcp.json` com o caminho absoluto da pasta (a partir do
+   template versionado `.mcp.json.example`; não sobrescreve o
+   existente).
+3. Se o cliente for Claude Code: o `.mcp.json` gerado na pasta demo-2
+   é lido automaticamente ao iniciar `claude` dentro dessa pasta.
    Se for OpenCode: conferir como ele carrega MCP servers na doc.
 4. Iniciar `claude` (ou `opencode`) e rodar `/mcp` para conferir que os
    três servers aparecem conectados.

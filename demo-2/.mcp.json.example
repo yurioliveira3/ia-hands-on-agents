@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "{{DEMO2_DIR}}"]
+    },
+    "sqlite": {
+      "command": "mcp-server-sqlite",
+      "args": ["--db-path", "{{DEMO2_DIR}}/podcast.sqlite"]
+    },
+    "fetch": {
+      "command": "mcp-server-fetch",
+      "args": []
+    }
+  }
+}

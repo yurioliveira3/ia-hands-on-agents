@@ -3,6 +3,7 @@
 .env
 .env.*
 !.env.example
+demo-2/.mcp.json
 *.key
 *token*
 !token*.example

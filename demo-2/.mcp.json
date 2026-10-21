@@ -2,18 +2,11 @@
   "mcpServers": {
     "filesystem": {
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/ABS/ATE/O/PASTA/DA/DEMO-2"
-      ]
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "/home/yurialves_indicium/projects/general/podcast-ia-hands-on/demo-2"]
     },
     "sqlite": {
       "command": "mcp-server-sqlite",
-      "args": [
-        "--db-path",
-        "/ABS/ATE/O/PASTA/DA/DEMO-2/podcast.sqlite"
-      ]
+      "args": ["--db-path", "/home/yurialves_indicium/projects/general/podcast-ia-hands-on/demo-2/podcast.sqlite"]
     },
     "fetch": {
       "command": "mcp-server-fetch",
