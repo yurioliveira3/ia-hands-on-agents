@@ -149,8 +149,8 @@ Siga na ordem; cada passo depende só do setup e do `.env`.
 | 2. Few-shot | demo-1/02 | 4 âncoras mudam o placar; o erro da linha 16 resiste | comentar uma âncora e ver a linha regredir |
 | 2b. Micro-tuning | demo-1/02 | 4 configs x 3 rodadas: parâmetros não consertam | adicionar outra configuração à lista |
 | 3. Agente à mão | demo-1/03 | o laço decidir/agir/observar sem framework | perguntar outra coisa que use a terceira tool (Wikipedia) |
-| 4. MCP | demo-2 | mesmo dado indo e voltando por 3 destinos | subir no Claude Code/OpenCode e trocar a pergunta |
-| 5. Evals (bônus) | demo-1/bonus_evals | suíte com gabarito: score por prompt | descomentar a suíte few-shot e comparar |
+| 4. Evals (bônus) | demo-1/bonus_evals | suíte com gabarito: score por prompt | descomentar a suíte few-shot e comparar |
+| 5. MCP | demo-2 | mesmo dado indo e voltando por 3 destinos | subir no Claude Code/OpenCode e trocar a pergunta |
 
 Resultado empírico validado em rodadas repetidas:
 - linhas 15 e 16 do CSV: armadilhas multimotivo; zero-shot erra sempre;
