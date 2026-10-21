@@ -15,9 +15,9 @@ Servers do `.mcp.json` (um por destino/função):
 
 1. Pré-requisitos: node/npx (necessário para o server filesystem via
    `npx -y @modelcontextprotocol/server-filesystem`) e dois servers
-   python via pip: `pip install mcp-server-fetch mcp-server-sqlite`. Os
+   python: `uv tool install mcp-server-fetch mcp-server-sqlite`. Os
    comandos `mcp-server-fetch` e `mcp-server-sqlite` precisam ficar no
-   PATH (instalar com `pip install --user` e verificar com `which`).
+   PATH (o `uv tool` instala em `~/.local/bin`; verificar com `which`).
 2. Rodar `make demo2-config` na raiz do projeto: gera o
    `demo-2/.mcp.json` com o caminho absoluto da pasta (a partir do
    template versionado `.mcp.json.example`; não sobrescreve o
