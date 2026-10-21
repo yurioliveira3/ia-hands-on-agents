@@ -1,7 +1,7 @@
 # IA Hands-on: da engenharia de prompt ao agente
 
 Material prático, nascido de uma sessão ao vivo e pensado para ser
-re-executado por você. A narrativa: da engenharia de prompt ao agente,
+re-executado pelo dev. A narrativa: da engenharia de prompt ao agente,
 visto por dentro, com dados de verdade.
 
 Tese central: o modelo é uma peça substituível - trocar de provedor é
@@ -9,7 +9,7 @@ editar três linhas do .env; a engenharia que permanece é prompt,
 exemplos, ferramentas e avaliação.
 
 Cada notebook é auto-contido: rode na ordem, pule para o que interessar
-ou vá direto às intervenções "Experimente você".
+ou vá direto às intervenções "Experimente".
 
 ## O mapa das camadas
 
@@ -29,7 +29,7 @@ usa os nomes das nossas camadas):
 
 ### A lógica de dentro para fora
 
-1. **Contexto** é tudo que você escreve na janela: prompt, exemplos,
+1. **Contexto** é tudo que o dev escreve na janela: prompt, exemplos,
    parâmetros. As camadas 1 e 2 mostram o placar mudar só com isso.
 2. **Laço** é o que o agente faz a cada volta: um JSON de ação, uma
    tool executada, o resultado voltando como mensagem, até o answer.
@@ -143,7 +143,7 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
 
 Siga na ordem; cada passo depende só do setup e do `.env`.
 
-| Passo | Notebook | O que acontece | Experimente você |
+| Passo | Notebook | O que acontece | Experimente |
 |---|---|---|---|
 | 1. Zero-shot | demo-1/01 | classificador sem exemplos: erra as armadilhas | trocar o índice de uma linha no CSV e reexecutar |
 | 2. Few-shot | demo-1/02 | 4 âncoras mudam o placar; o erro da linha 16 resiste | comentar uma âncora e ver a linha regredir |
