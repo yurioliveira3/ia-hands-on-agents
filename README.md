@@ -73,6 +73,9 @@ de custo.
 
 ```
 podcast-ia-hands-on/
+  Makefile                setup re-executavel: make setup/env/test/notebooks/evals
+  pyproject.toml          dependencias declaradas (gerenciadas pelo uv)
+  uv.lock                 lock das dependencias (instalacao reprodutivel)
   llm.py                  helper agnóstico (padrão OpenAI-compat) + retry 429
   .env.example            template de credenciais -> copie para .env
   LICENSE                 MIT: replique, teste e faça fork à vontade
@@ -90,11 +93,19 @@ podcast-ia-hands-on/
 
 ## Setup
 
-1. Python 3.10+ com:
+Tudo via `make`, com dependências gerenciadas pelo `uv` (Python 3.10+
+instalado automaticamente se necessário). Para instalar o `uv` (se não
+tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
+
+1. Preparar o ambiente (cria `.venv` e instala do lock):
    ```
-   pip install openai pandas jupyterlab
+   make setup
    ```
-2. Copiar `.env.example` para `.env` e preencher:
+2. Criar o `.env` a partir do template (não sobrescreve um existente)
+   e preencher:
+   ```
+   make env
+   ```
    - `LLM_API_KEY` - chave do provedor
    - `LLM_MODEL` - nome do modelo
    - `LLM_BASE_URL` - base do endpoint (padrão OpenAI-compatible)
@@ -108,12 +119,22 @@ podcast-ia-hands-on/
      com `gemini-2.5-flash-lite` (~1.000 req/dia no free tier; evite os
      flash "padrão", ~20 req/dia e trava no meio do roteiro)
    - OpenAI: `https://api.openai.com/v1/`
-3. Testar o caminho feliz:
+3. Testar o caminho feliz (consome uma chamada pequena):
    ```
-   python -c "from llm import chat; print(chat([{'role':'user','content':'diga ok'}]))"
+   make test
    ```
-4. Para a demo 2: node/npx instalados (server filesystem via `npx -y`)
-   e `pip install mcp-server-fetch mcp-server-sqlite` (comandos no PATH).
+4. Abrir os notebooks (demo 1):
+   ```
+   make notebooks
+   ```
+5. Rodar a suíte de evals com gabarito (gasta chamadas da API por
+   design; sai em `export/bonus_evals.ipynb`):
+   ```
+   make evals
+   ```
+6. Para a demo 2: node/npx instalados (server filesystem via `npx -y`)
+   e `uv tool install mcp-server-fetch mcp-server-sqlite` (comandos no
+   PATH).
 
 ## Passo a passo
 

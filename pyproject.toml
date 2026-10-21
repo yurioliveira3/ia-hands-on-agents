@@ -1,0 +1,12 @@
+[project]
+name = "podcast-ia-hands-on"
+version = "0.1.0"
+description = "IA Hands-on: da engenharia de prompt ao agente"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "openai",
+    "pandas",
+    "jupyterlab",
+]
