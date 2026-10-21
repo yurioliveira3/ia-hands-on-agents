@@ -55,7 +55,7 @@ dentro de framework):
 
 | Nível | Quem decide | Onde ler no código |
 |---|---|---|
-| O modelo decide acabo | o turno com `{"answer": ...}` encerra o laço; só uma `tool` gera a próxima volta | demo-1/03, `run_agent`: `if 'answer' in acao: return` |
+| O modelo decide acabou | o turno com `{"answer": ...}` encerra o laço; só uma `tool` gera a próxima volta | demo-1/03, `run_agent`: `if 'answer' in acao: return` |
 | O freio (guardrail) | o teto de voltas protege do agente perdido; estourou, devolve `'(limite de passos atingido)'` | demo-1/03, `run_agent(..., max_steps=6)` |
 | A resposta em si | `finish_reason` da API: `stop` concluiu; `length` = orçamento de tokens estourou (o `llm.py` levanta erro com conteúdo vazio) | llm.py, bloco `if not content` |
 | A infraestrutura | 429 do free tier: até 4 tentativas com backoff; persistindo, o erro sobe | llm.py, bloco retry |
