@@ -73,7 +73,7 @@ de custo.
 
 ```
 podcast-ia-hands-on/
-  Makefile                setup re-executavel: make setup/env/test/notebooks/evals
+  Makefile                setup re-executavel: make setup/env/test/notebooks/evals/demo2-config/clean
   pyproject.toml          dependencias declaradas (gerenciadas pelo uv)
   uv.lock                 lock das dependencias (instalacao reprodutivel)
   llm.py                  helper agnóstico (padrão OpenAI-compat) + retry 429
