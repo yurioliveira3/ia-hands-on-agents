@@ -55,18 +55,8 @@ def chat(
       LLM_BASE_URL  - base do endpoint
       LLM_MODEL     - nome do modelo
 
-    Combinações testadas pela demo:
-      OpenCode Go:   LLM_BASE_URL=https://opencode.ai/inference/go/openai/v1/
-                     LLM_MODEL=minimax-m3.1-flash-free
-      Gemini free:   LLM_BASE_URL=https://generativelanguage.googleapis.com/v1beta/openai/
-                     LLM_MODEL=gemini-2.5-flash-lite  (~1.000 req/dia no free tier;
-                     evite os flash "padrao", que têm ~20 req/dia)
-      OpenAI:        LLM_BASE_URL=https://api.openai.com/v1
-                     LLM_MODEL=gpt-4o-mini
-
-    Alternativa não-testada, mas compatível e com bons modelos free:
-      OpenRouter:    LLM_BASE_URL=https://openrouter.ai/api/v1/
-                     LLM_MODEL=<modelo com sufixo ":free" - ver openrouter.ai/models>
+    Provedores e quotas (OpenCode Go, OpenRouter, Gemini, OpenAI):
+    fonte única no .env.example - copie da lá, não daqui.
 
     Parâmetros de amostragem (tema de discussão da demo; o código deixa
     de usá-los quando None):

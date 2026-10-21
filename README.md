@@ -55,7 +55,7 @@ dentro de framework):
 
 | Nível | Quem decide | Onde ler no código |
 |---|---|---|
-| O modelo decide acabo | o turno com `{"answer": ...}` encerra o laço; só uma `tool` gera a próxima volta | demo-1/03, `run_agent`: `if 'answer' in acao: return` |
+| O modelo decide acabou | o turno com `{"answer": ...}` encerra o laço; só uma `tool` gera a próxima volta | demo-1/03, `run_agent`: `if 'answer' in acao: return` |
 | O freio (guardrail) | o teto de voltas protege do agente perdido; estourou, devolve `'(limite de passos atingido)'` | demo-1/03, `run_agent(..., max_steps=6)` |
 | A resposta em si | `finish_reason` da API: `stop` concluiu; `length` = orçamento de tokens estourou (o `llm.py` levanta erro com conteúdo vazio) | llm.py, bloco `if not content` |
 | A infraestrutura | 429 do free tier: até 4 tentativas com backoff; persistindo, o erro sobe | llm.py, bloco retry |
@@ -87,7 +87,7 @@ podcast-ia-hands-on/
     03_agent_loop.ipynb   camada 3: o laço do agente escrito à mão
     bonus_evals.ipynb     camada 5 (bônus): eval-driven development
   demo-2/                 Demo 2 - top-3 MCPs criando e lendo em destinos
-    .mcp.json             config dos 3 servers MCP
+    .mcp.json.example     template dos 3 servers MCP (o gerado vem de make demo2-config)
     roteiro-demo-2.md     passo a passo da demonstração ao vivo
 ```
 
@@ -134,7 +134,10 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    ```
 6. Para a demo 2: node/npx instalados (server filesystem via `npx -y`)
    e `uv tool install mcp-server-fetch mcp-server-sqlite` (comandos no
-   PATH).
+   PATH). Gerar o config dos MCP servers com o caminho da sua pasta:
+   ```
+   make demo2-config
+   ```
 
 ## Passo a passo
 
@@ -161,8 +164,6 @@ Resultado empírico validado em rodadas repetidas:
 - O `llm.py` já faz retry com backoff no 429 - a mensagem de espera em
   tela é conteúdo, não bug ("quotas são reais").
 - Tudo roda localmente; a única dependência externa é a API de LLM.
-- Na demo 2, o caminho do `.mcp.json` é placeholder: troque
-  `/ABS/ATE/O/PASTA/DA/DEMO-2` pelo caminho real da pasta.
 
 ## Síntese por camada
 
