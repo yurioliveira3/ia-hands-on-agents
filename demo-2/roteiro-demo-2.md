@@ -69,16 +69,16 @@ com uma nota de "o que a plateia espera ver":
 
 | Nível | Arquivo | O que acrescenta |
 |---|---|---|
-| Pequeno | `prompts/prompt-pequeno.md` | o ciclo completo em uma instrução única, sem contrato de saída - o agente decide tudo |
+| Simples | `prompts/prompt-simples.md` | o ciclo completo em uma instrução única, sem contrato de saída - o agente decide tudo |
 | Médio | `prompts/prompt-medio.md` | "contrato de saída": entregas nomeadas, estrutura exata do resumo.md, schema da tabela, regras de desempate - prompt como especificação |
-| Robusto | `prompts/prompt-robusto.md` | template reutilizável com few-shots, estilo de saída e variáveis `{{CSV_PATH}}`, `{{PASTA_SAIDA}}`, `{{URL_EXTERNA}}` - troca as chaves (mesma técnica `sed` do `make demo2-config`) e roda em outra base sem reescrever |
+| Avançado | `prompts/prompt-avancado.md` | template reutilizável com few-shots, estilo de saída e variáveis `{{CSV_PATH}}`, `{{PASTA_SAIDA}}`, `{{URL_EXTERNA}}` - troca as chaves (mesma técnica `sed` do `make demo2-config`) e roda em outra base sem reescrever |
 
-No nível pequeno, na tela o que se vê é o agente decidindo a sequência
+No nível simples, na tela o que se vê é o agente decidindo a sequência
 sozinho (escrever → gravar → buscar externo → reabrir os artefatos e
 concluir): a camada 3 da demo 1 acontecendo sobre o catálogo MCP. A URL
 do AwesomeAPI é pública, sem chave de API, e devolve um JSON com a
 cotação USD/BRL — dado que conversa com o tema (reclamações de cobrança
-de um e-commerce). O "liste quais MCPs você usou" do nível pequeno
+de um e-commerce). O "liste quais MCPs você usou" do nível simples
 serve de prova visual de que os três servers entraram no fluxo.
 
 ## Pontos de reflexão

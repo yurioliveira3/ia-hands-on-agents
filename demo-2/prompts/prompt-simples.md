@@ -22,3 +22,15 @@ três MCPs — filesystem, sqlite e fetch:
 O que a plateia espera ver: o agente planejando a sequência sozinho
 (escrever → gravar → buscar externo → reabrir os artefatos e concluir).
 O item 5 é a prova visual de que os três servers entraram no fluxo.
+
+Saída esperada (com a base de 18 reclamações do projeto):
+
+- No chat, algo como: *"A categoria com mais reclamações é cobrança,
+  com 5 dos 18 registros — mais que entrega (4) e o triplo de app,
+  atendimento e produto (3 cada)."* + a lista dos três MCPs usados.
+- `resumo.md` criado: título, parágrafo de contexto e tabela de
+  categorias (cobranca 5, entrega 4, app/atendimento/produto 3),
+  com a cotação USD/BRL buscada no fetch (~5,02 na coleta de
+  referência).
+- `podcast.sqlite` com a tabela `top3`: cobranca (5), entrega (4) e
+  a primeira categoria em ordem alfabética entre as que têm 3.

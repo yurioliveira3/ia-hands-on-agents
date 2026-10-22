@@ -39,3 +39,18 @@ saída mínima aceitável está definida abaixo em "Contrato de saída".
 O que a plateia espera ver: o mesmo ciclo, mas o pedido fecha em três
 entregas verificáveis — bom momento para apontar "prompt como
 especificação".
+
+Saída esperada (com a base de 18 reclamações do projeto):
+
+- `resumo.md` com a estrutura exata: título nível 1, parágrafo de
+  contexto, tabela `| Categoria | Reclamações | % do total |`
+  (cobranca 27,8%, entrega 22,2%, app 16,7%, atendimento 16,7%,
+  produto 16,7%), linha de total, seção "Dado externo" com a cotação
+  e data/hora, e a regra de desempate como comentário no arquivo.
+- `podcast.sqlite`: tabela `top3 (categoria, contagem, percentual)`
+  com exatamente 3 linhas — cobranca 5/27,78, entrega 4/22,22,
+  app 3/16,67.
+- No chat, no máximo 3 linhas: *"Categoria líder: cobrança, 5 de 18
+  (27,8%). Somando a segunda, entrega: 50% dos registros em duas
+  categorias. MCPs: filesystem, sqlite, fetch."* — sem despejar a
+  tabela no chat.

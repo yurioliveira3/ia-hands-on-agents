@@ -75,3 +75,18 @@ referencie as chaves pelo nome.
 O que a plateia espera ver: o parecer saindo com cara de relatório
 padrão e o mesmo template rodando com outra base (`reclamacoes2.csv`)
 só trocando o caminho.
+
+Saída esperada (com a base de 18 reclamações do projeto):
+
+- `parecer.md` com as 5 seções na ordem: sumário; tabela de
+  distribuição (cobranca 27,8%, entrega 22,2%, app/atendimento/
+  produto 16,7% cada); 3 insights apoiados em números; dado de
+  mercado com a cotação e o aviso honesto se a ligação for fraca;
+  registro de método (desempate alfabético, 18 linhas lidas, MCPs
+  com as ferramentas chamadas).
+- `podcast.sqlite`: tabelas `resumo_categoria` e `insights`
+  recriadas do zero nos valores acima.
+- No chat, apenas 1 linha, conforme o few-shot 3: *"Parecer salvo
+  em .../parecer.md. Categoria líder: cobranca (5/18, 28%).
+  MCPs: filesystem, sqlite, fetch."* — o relatório completo fica no
+  arquivo, não no chat.
