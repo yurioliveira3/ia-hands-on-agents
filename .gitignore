@@ -27,6 +27,7 @@ env/
 *.sqlite3
 *.db
 resumo.md
+demo-2/parecer.md
 demo-2/reclamacoes.csv
 export/
 
