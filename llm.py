@@ -10,6 +10,22 @@ from pathlib import Path
 
 from openai import OpenAI, RateLimitError
 
+
+def _load_env(path: str = ".env") -> None:
+    p = Path(path)
+    if not p.exists():
+        return
+    for line in p.read_text().splitlines():
+        line = line.strip()
+        if line and not line.startswith("#") and "=" in line:
+            key, value = line.split("=", 1)
+            os.environ.setdefault(key.strip(), value.strip())
+
+
+# Carregar o .env antes de calcular o session id: assim LLM_SESSION_ID
+# do arquivo vale também no import direto (sem --env-file).
+_load_env(os.path.join(os.path.dirname(__file__), ".env"))
+
 # OpenCode Go exige um id de sessão estável por conversa (header
 # x-opencode-session); é o mesmo princípio do session_id de qualquer
 # gateway: sem ele a infraestrutura não sabe rotear as chamadas.
@@ -26,20 +42,6 @@ _DEFAULT_HEADERS = {
     "User-Agent": "podcast-demo/1.0",
     "x-opencode-session": _SESSION_ID,
 }
-
-
-def _load_env(path: str = ".env") -> None:
-    p = Path(path)
-    if not p.exists():
-        return
-    for line in p.read_text().splitlines():
-        line = line.strip()
-        if line and not line.startswith("#") and "=" in line:
-            key, value = line.split("=", 1)
-            os.environ.setdefault(key.strip(), value.strip())
-
-
-_load_env(os.path.join(os.path.dirname(__file__), ".env"))
 
 
 def chat(
