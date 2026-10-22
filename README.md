@@ -95,6 +95,19 @@ podcast-ia-hands-on/
 
 ## Setup
 
+### Chaves de API: onde criar e o que é free
+
+O material aceita qualquer endpoint compatível com OpenAI. Para começar
+sem custo, use uma chave free de OpenRouter ou Gemini; OpenAI e OpenCode
+Go são opções pagas.
+
+| Provedor | Onde criar a chave | Free? |
+|---|---|---|
+| OpenRouter | https://openrouter.ai/settings/keys | Sim: modelos com sufixo `:free`, sujeitos a rate limit |
+| Gemini | https://aistudio.google.com/api-keys | Sim: free tier com quota; veja https://ai.google.dev/gemini-api/docs/rate-limits |
+| OpenCode Go | https://opencode.ai/console | Não: o plano Go é pago (US$10/mês na data deste material); o modelo `-free` tem limite de uso |
+| OpenAI | https://platform.openai.com/api-keys | Não: a API é cobrada por token |
+
 Tudo via `make`, com dependências gerenciadas pelo `uv` (Python 3.10+
 instalado automaticamente se necessário). Para instalar o `uv` (se não
 tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
@@ -113,12 +126,11 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    - `LLM_BASE_URL` - base do endpoint (padrão OpenAI-compatible)
    - OpenCode Go (recomendado):
      `https://opencode.ai/inference/go/openai/v1/` com um modelo free
-     (ex.: `minimax-m3.1-flash-free`); key em https://opencode.ai/console.
-     O plano Go é pago (US$10/mês na data deste material) e o modelo
-     free tem limite de uso; confira a oferta atual no console.
+     (ex.: `minimax-m3.1-flash-free`). O plano Go é pago (US$10/mês na
+     data deste material) e o modelo free tem limite de uso; confira a
+     oferta atual no console.
    - OpenRouter: `https://openrouter.ai/api/v1/` com um modelo `:free`
-     (a lista muda com frequência: ver https://openrouter.ai/models);
-     key em https://openrouter.ai/settings/keys
+     (a lista muda com frequência: ver https://openrouter.ai/models)
    - Gemini free: `https://generativelanguage.googleapis.com/v1beta/openai/`
      com `gemini-2.5-flash-lite` (~1.000 req/dia no free tier; evite os
      flash "padrão", ~20 req/dia e trava no meio do roteiro)
@@ -213,6 +225,18 @@ do notebook registra o modelo usado):
    padroniza a parte chata - inclusive o teste de integração.
 5. Evals: como saber que funciona sem achismo? Rode a suíte: o TDD do
    mundo não-determinístico.
+
+## Referências
+
+- Anthropic. **Prompting best practices.**
+  https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices
+  Base para instruções claras, exemplos few-shot e tags XML usados nos notebooks 01 e 02.
+- Anthropic. **Tool use with Claude.**
+  https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview
+  Explica o ciclo `tool_use`/`tool_result` e o laço que o notebook 03 implementa à mão.
+- OpenAI. **Function calling.**
+  https://developers.openai.com/api/docs/guides/function-calling
+  Referência para declarar ferramentas com JSON Schema e devolver o resultado ao modelo.
 
 ## Licença
 

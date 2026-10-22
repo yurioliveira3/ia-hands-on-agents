@@ -8,7 +8,22 @@ import time
 import uuid
 from pathlib import Path
 
-from openai import OpenAI, RateLimitError
+from openai import (
+    APIConnectionError,
+    APIStatusError,
+    AuthenticationError,
+    NotFoundError,
+    OpenAI,
+    PermissionDeniedError,
+    RateLimitError,
+)
+
+
+def _limpar_valor(valor: str) -> str:
+    valor = valor.strip()
+    if len(valor) >= 2 and valor[0] == valor[-1] and valor[0] in "\"'":
+        return valor[1:-1]
+    return valor
 
 
 def _load_env(path: str = ".env") -> None:
@@ -19,7 +34,11 @@ def _load_env(path: str = ".env") -> None:
         line = line.strip()
         if line and not line.startswith("#") and "=" in line:
             key, value = line.split("=", 1)
-            os.environ.setdefault(key.strip(), value.strip())
+            os.environ.setdefault(key.strip(), _limpar_valor(value))
+
+
+def _env(nome: str) -> str:
+    return _limpar_valor(os.environ.get(nome, ""))
 
 
 # Carregar o .env antes de calcular o session id: assim LLM_SESSION_ID
@@ -32,7 +51,7 @@ _load_env(os.path.join(os.path.dirname(__file__), ".env"))
 # Um id por processo cobre a demo inteira (cada notebook é tratado
 # como uma conversa). Sobrescreva com LLM_SESSION_ID no .env se quiser
 # agrupar as rodadas do seu jeito.
-_SESSION_ID = os.environ.get("LLM_SESSION_ID") or str(uuid.uuid4())
+_SESSION_ID = _env("LLM_SESSION_ID") or str(uuid.uuid4())
 
 # Os dois headers abaixo são específicos do OpenCode Go: o session id
 # roteia a conversa e o User-Agent próprio evita ser tratado como
@@ -85,7 +104,7 @@ def chat(
       LLM_MODEL     - nome do modelo
 
     Provedores e quotas (OpenCode Go, OpenRouter, Gemini, OpenAI):
-    fonte única no .env.example - copie da lá, não daqui.
+    detalhes no .env.example e na seção "Chaves de API" do README.
 
     Parâmetros de amostragem (tema de discussão da demo; o código deixa
     de usá-los quando None):
@@ -101,16 +120,17 @@ def chat(
     usage_total() (acumulado do processo); ambos vêm do campo usage da
     resposta, quando o provedor o envia.
     """
-    faltando = [var for var in ("LLM_API_KEY", "LLM_MODEL") if not os.environ.get(var)]
+    faltando = [var for var in ("LLM_API_KEY", "LLM_MODEL") if not _env(var)]
     if faltando:
         raise RuntimeError(
             "Variáveis faltando: " + ", ".join(faltando) + ". "
             "Copie .env.example para .env, preencha e tente de novo "
-            "(o arquivo fica na mesma pasta do llm.py)."
+            "(o arquivo fica na mesma pasta do llm.py). "
+            "Para criar uma chave free, veja 'Chaves de API' no README."
         )
 
     params: dict = {
-        "model": os.environ["LLM_MODEL"],
+        "model": _env("LLM_MODEL"),
         "messages": messages,
         "max_tokens": max_tokens,
     }
@@ -120,8 +140,8 @@ def chat(
         params["top_p"] = top_p
 
     client = OpenAI(
-        base_url=os.environ.get("LLM_BASE_URL") or None,
-        api_key=os.environ["LLM_API_KEY"],
+        base_url=_env("LLM_BASE_URL") or None,
+        api_key=_env("LLM_API_KEY"),
         default_headers=_DEFAULT_HEADERS,
     )
 
@@ -129,15 +149,46 @@ def chat(
         try:
             response = client.chat.completions.create(**params)
             break
-        except RateLimitError:
+        except RateLimitError as exc:
             # 429 no free tier é parte da vida da demo, não uma exceção.
             # O backoff absorve os 429 transitórios; se persistir após as
-            # 4 tentativas, a exceção sobe para o chamador.
+            # 4 tentativas, vira um RuntimeError com orientação.
             if attempt == 3:
-                raise
+                raise RuntimeError(
+                    "Rate limit persistente após 4 tentativas. Aguarde e "
+                    "tente de novo ou troque de modelo/provedor (as opções "
+                    "free estão no .env.example)."
+                ) from exc
             wait = 15 * (attempt + 1) + random.uniform(0, 3)
             print(f"(rate limit; aguardando {wait:.0f}s antes de tentar de novo)")
             time.sleep(wait)
+        except AuthenticationError as exc:
+            raise RuntimeError(
+                "Chave recusada pelo provedor (401). Confira LLM_API_KEY no "
+                ".env e se ela pertence ao provedor de LLM_BASE_URL."
+            ) from exc
+        except PermissionDeniedError as exc:
+            raise RuntimeError(
+                "A chave foi aceita, mas não tem permissão para este modelo "
+                "(403). Confira LLM_MODEL e as permissões da conta no provedor."
+            ) from exc
+        except APIConnectionError as exc:
+            raise RuntimeError(
+                "Não foi possível conectar ao provedor. Confira LLM_BASE_URL "
+                "no .env (inclua o path /v1 quando o provedor exigir) e sua "
+                "conexão."
+            ) from exc
+        except NotFoundError as exc:
+            raise RuntimeError(
+                "Endpoint ou modelo não encontrado (404). Confira LLM_BASE_URL "
+                "e LLM_MODEL no .env; o path do endpoint muda entre provedores."
+            ) from exc
+        except APIStatusError as exc:
+            raise RuntimeError(
+                f"O provedor respondeu HTTP {exc.status_code}. Confira "
+                "LLM_BASE_URL, LLM_MODEL e LLM_API_KEY no .env; a mensagem "
+                "original do provedor está na causa desta exceção."
+            ) from exc
 
     _registrar_uso(getattr(response, "usage", None))
 
