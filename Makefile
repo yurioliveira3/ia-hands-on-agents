@@ -38,5 +38,6 @@ demo2-config:
 	@echo "demo-2/reclamacoes.csv copiado de data/"
 
 clean:
-	rm -rf __pycache__ .pytest_cache .ipynb_checkpoints
+	rm -rf __pycache__ .pytest_cache .ipynb_checkpoints export
+	rm -f demo-2/.mcp.json demo-2/opencode.json demo-2/reclamacoes.csv demo-2/podcast.sqlite demo-2/resumo.md
 	find . -name ".ipynb_checkpoints" -type d -exec rm -rf {} +
