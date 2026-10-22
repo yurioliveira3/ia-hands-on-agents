@@ -7,8 +7,8 @@ conjunto de dados sem reescrever nada. Serve para mostrar o próximo
 degrau: prompt como artefato versionado, com exemplos (few-shots),
 estilo de saída definido e variáveis.
 
-Adicione este conteúdo no início da conversa (ou como arquivo de
-instruções do projeto) se o seu cliente suportar output style:
+Adicione este conteúdo no início da conversa ou no arquivo de
+instruções do projeto (CLAUDE.md no Claude Code, AGENTS.md no OpenCode):
 
 ```
 # Papel e objetivo
@@ -66,15 +66,18 @@ não no chat.
 - Se {{PASTA_SAIDA}} não existir, crie-a.
 ```
 
-**Como reutilizar:** troque as três chaves por `find -replace`/`sed`
+Para a demo ao vivo, pré-preencha as três chaves (ou informe os
+valores na conversa); não deixe os {{...}} literais.
+
+**Como reutilizar:** troque as três chaves com `sed`
 (`sed 's|{{CSV_PATH}}|/caminho/base.csv|g;s|{{PASTA_SAIDA}}|/caminho/saida|g;s|{{URL_EXTERNA}}|https://...|g'`,
 a mesma técnica que o `make demo2-config` usa nos templates de config)
 ou simplesmente cole no cliente e informe os três valores na conversa —
 referencie as chaves pelo nome.
 
 O que a plateia espera ver: o parecer saindo com cara de relatório
-padrão e o mesmo template rodando com outra base (`reclamacoes2.csv`)
-só trocando o caminho.
+padrão e o mesmo template pronto para rodar em outra base só trocando
+o caminho.
 
 Saída esperada (com a base de 18 reclamações do projeto):
 
