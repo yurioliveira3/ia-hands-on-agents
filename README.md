@@ -24,7 +24,7 @@ usa os nomes das nossas camadas):
 | Engenharia de contexto (teal) | zero-shot (camada 1) e few-shot (camada 2): tudo que entra na janela do modelo | demo-1/01, demo-1/02 |
 | Laço do agente | o run_agent à mão: decidir, agir, observar, responder | demo-1/03 |
 | Orquestração | ferramentas coordenadas por um catálogo padrão (MCP): filesystem, sqlite, fetch | demo-2 |
-| Armação (harness) | a CLI do agente que conecta tudo: Claude Code ou OpenCode, permissões, segredos | demo-2/.mcp.json, .env |
+| Armação (harness) | a CLI do agente que conecta tudo: Claude Code ou OpenCode, permissões, segredos | demo-2/.mcp.json, demo-2/opencode.json, .env |
 | Envelope (evals, custo) | como saber que funciona sem achar: suíte com gabarito | demo-1/bonus_evals |
 
 ### A lógica de dentro para fora
@@ -87,7 +87,8 @@ podcast-ia-hands-on/
     03_agent_loop.ipynb   camada 3: o laço do agente escrito à mão
     bonus_evals.ipynb     camada 5 (bônus): eval-driven development
   demo-2/                 Demo 2 - top-3 MCPs criando e lendo em destinos
-    .mcp.json.example     template dos 3 servers MCP (o gerado vem de make demo2-config)
+    .mcp.json.example     template dos 3 servers MCP para Claude Code
+    opencode.json.example template equivalente para OpenCode
     roteiro-demo-2.md     passo a passo da demonstração ao vivo
 ```
 
@@ -132,12 +133,24 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    ```
    make evals
    ```
-6. Para a demo 2: node/npx instalados (server filesystem via `npx -y`)
-   e `uv tool install mcp-server-fetch mcp-server-sqlite` (comandos no
-   PATH). Gerar o config dos MCP servers com o caminho da sua pasta:
+6. Para a demo 2: Node.js 20+ com npx (o server filesystem está
+   pinado em `1.0.0`; a linha `2.0.0` exige Node 24) e os servers
+   Python, um pacote por comando:
+   ```
+   uv tool install mcp-server-fetch
+   uv tool install mcp-server-sqlite
+   ```
+   Os comandos `mcp-server-fetch` e `mcp-server-sqlite` precisam estar
+   no PATH (o `uv tool` instala em `~/.local/bin`; confira com `which`).
+   Gerar os configs e a cópia local do CSV:
    ```
    make demo2-config
    ```
+   O target escreve `demo-2/.mcp.json` (Claude Code) e
+   `demo-2/opencode.json` (OpenCode) com o caminho absoluto da sua
+   pasta, e copia `data/reclamacoes.csv` para `demo-2/`.
+   No Claude Code, confira com `/mcp`; no OpenCode, com
+   `opencode mcp list`.
 
 ## Passo a passo
 

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "filesystem": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem@1.0.0", "{{DEMO2_DIR}}"],
+      "enabled": true
+    },
+    "sqlite": {
+      "type": "local",
+      "command": ["mcp-server-sqlite", "--db-path", "{{DEMO2_DIR}}/podcast.sqlite"],
+      "enabled": true
+    },
+    "fetch": {
+      "type": "local",
+      "command": ["mcp-server-fetch"],
+      "enabled": true
+    }
+  }
+}

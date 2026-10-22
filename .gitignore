@@ -4,6 +4,7 @@
 .env.*
 !.env.example
 demo-2/.mcp.json
+demo-2/opencode.json
 *.key
 *token*
 !token*.example
@@ -26,6 +27,7 @@ env/
 *.sqlite3
 *.db
 resumo.md
+demo-2/reclamacoes.csv
 export/
 
 # --- fallbacks e gravações ---
