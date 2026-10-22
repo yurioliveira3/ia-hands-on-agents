@@ -28,6 +28,14 @@ demo2-config:
 		sed "s|{{DEMO2_DIR}}|$(CURDIR)/demo-2|g" demo-2/.mcp.json.example > demo-2/.mcp.json; \
 		echo "demo-2/.mcp.json gerado com o caminho $(CURDIR)/demo-2"; \
 	fi
+	@if [ -f demo-2/opencode.json ]; then \
+		echo "demo-2/opencode.json ja existe (nao sobrescrevo)"; \
+	else \
+		sed "s|{{DEMO2_DIR}}|$(CURDIR)/demo-2|g" demo-2/opencode.json.example > demo-2/opencode.json; \
+		echo "demo-2/opencode.json gerado com o caminho $(CURDIR)/demo-2"; \
+	fi
+	@cp data/reclamacoes.csv demo-2/reclamacoes.csv
+	@echo "demo-2/reclamacoes.csv copiado de data/"
 
 clean:
 	rm -rf __pycache__ .pytest_cache .ipynb_checkpoints

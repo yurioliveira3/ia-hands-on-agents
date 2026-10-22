@@ -2,7 +2,7 @@
   "mcpServers": {
     "filesystem": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "{{DEMO2_DIR}}"]
+      "args": ["-y", "@modelcontextprotocol/server-filesystem@1.0.0", "{{DEMO2_DIR}}"]
     },
     "sqlite": {
       "command": "mcp-server-sqlite",
