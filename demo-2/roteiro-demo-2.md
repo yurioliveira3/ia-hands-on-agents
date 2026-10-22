@@ -1,10 +1,11 @@
 # Demo 2 - top-3 MCPs ao vivo (~5 min)
 
-Objetivo: mostrar configuração rápida e o mesmo dado fluindo por três
-destinos diferentes, criado e relido pelo LLM somente com linguagem
-natural. Esta é a camada "protocolo": no agente da demo-1, as
-ferramentas eram as que nós escrevemos; aqui, o MCP entrega ao cliente
-um catálogo de ferramentas padrão, pronto para usar.
+Objetivo: mostrar configuração rápida e o dado criado, gravado e
+relido em dois destinos locais, com o fetch somando um dado externo -
+tudo pelo LLM e somente com linguagem natural. Esta é a camada
+"protocolo": no agente da demo-1, as ferramentas eram as que nós
+escrevemos; aqui, o MCP entrega ao cliente um catálogo de ferramentas
+padrão, pronto para usar.
 
 Servers dos configs gerados (`.mcp.json` para Claude Code,
 `opencode.json` para OpenCode; um por destino/função):
