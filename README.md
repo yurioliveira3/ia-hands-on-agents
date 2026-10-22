@@ -65,15 +65,16 @@ Parar cedo demais entrega resposta vazia; parar tarde demais entrega
 conta (tokens e giros). O `max_steps` nunca é conveniência: é política
 de custo.
 
-### Um dado, três destinos (demo 2)
+### Um dado, dois destinos locais e um externo (demo 2)
 
-![Um dado, três destinos](diagramas/03-um-dado-tres-destinos.svg)
+![Um dado, dois destinos locais e um externo](diagramas/03-um-dado-tres-destinos.svg)
 
 ## Estrutura
 
 ```
 podcast-ia-hands-on/
-  Makefile                setup re-executavel: make setup/env/test/notebooks/evals/demo2-config/clean
+  Makefile                setup re-executavel: make setup/env/test/notebooks/evals/demo2-config
+                          clean remove os artefatos gerados
   pyproject.toml          dependencias declaradas (gerenciadas pelo uv)
   uv.lock                 lock das dependencias (instalacao reprodutivel)
   llm.py                  helper agnóstico (padrão OpenAI-compat) + retry 429
@@ -112,7 +113,9 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    - `LLM_BASE_URL` - base do endpoint (padrão OpenAI-compatible)
    - OpenCode Go (recomendado):
      `https://opencode.ai/inference/go/openai/v1/` com um modelo free
-     (ex.: `minimax-m3.1-flash-free`); key em https://opencode.ai/console
+     (ex.: `minimax-m3.1-flash-free`); key em https://opencode.ai/console.
+     O plano Go é pago (US$10/mês na data deste material) e o modelo
+     free tem limite de uso; confira a oferta atual no console.
    - OpenRouter: `https://openrouter.ai/api/v1/` com um modelo `:free`
      (a lista muda com frequência: ver https://openrouter.ai/models);
      key em https://openrouter.ai/settings/keys
@@ -129,7 +132,9 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    make notebooks
    ```
 5. Rodar a suíte de evals com gabarito (gasta chamadas da API por
-   design; sai em `export/bonus_evals.ipynb`):
+   design; o alvo executa só o zero-shot, 11 chamadas; a suíte
+   few-shot está comentada e dobra o custo; sai em
+   `export/bonus_evals.ipynb`):
    ```
    make evals
    ```
@@ -159,21 +164,25 @@ Siga na ordem; cada passo depende só do setup e do `.env`.
 | Passo | Notebook | O que acontece | Experimente |
 |---|---|---|---|
 | 1. Zero-shot | demo-1/01 | classificador sem exemplos: erra as armadilhas | trocar o índice de uma linha no CSV e reexecutar |
-| 2. Few-shot | demo-1/02 | 4 âncoras mudam o placar; o erro da linha 16 resiste | comentar uma âncora e ver a linha regredir |
+| 2. Few-shot | demo-1/02 | 4 âncoras mudam o placar; o erro do índice 16 resiste | comentar uma âncora e ver o índice regredir |
 | 2b. Micro-tuning | demo-1/02 | 4 configs x 3 rodadas: parâmetros não consertam | adicionar outra configuração à lista |
-| 2c. Exemplo novo | demo-1/02 | a intervenção que faltava: um quinto exemplo para a linha 16 | comparar o placar de 15/16/17 |
+| 2c. Exemplo novo | demo-1/02 | a intervenção que faltava: um quinto exemplo para o índice 16 | comparar o placar de 15/16/17 |
 | 3. Agente à mão | demo-1/03 | o laço decidir/agir/observar sem framework | perguntar outra coisa que use a terceira tool (Wikipedia) |
 | 4. Evals (bônus) | demo-1/bonus_evals | suíte com gabarito: score por prompt | descomentar a suíte few-shot e comparar |
-| 5. MCP | demo-2 | mesmo dado indo e voltando por 3 destinos | subir no Claude Code/OpenCode e trocar a pergunta |
+| 5. MCP | demo-2 | o dado criado, gravado e relido; o fetch soma um externo | subir no Claude Code/OpenCode e trocar a pergunta |
+
+Os índices citados são posições 0-based do DataFrame usado no notebook
+(`df.iloc`). No arquivo CSV, a linha física é o índice + 2 (por causa do
+cabeçalho); o índice 15, por exemplo, é a linha 17 do arquivo.
 
 Resultado empírico observado (os números variam com o modelo; o output
 do notebook registra o modelo usado):
-- linhas 15 e 16 do CSV: armadilhas multimotivo; zero-shot erra sempre;
-- linhas 15 e 17 consertam de forma estável com os 4 exemplos few-shot;
-- linha 16: propositalmente sem âncora - o micro-tuning não salva
+- índices 15 e 16 do DataFrame: armadilhas multimotivo; zero-shot erra sempre;
+- índices 15 e 17: consertam de forma estável com os 4 exemplos few-shot;
+- índice 16: propositalmente sem âncora - o micro-tuning não salva
   (placar 6/9 em qualquer configuração de amostragem). A intervenção
   é um exemplo novo que ensina a regra; a seção "Intervenção: um
-  exemplo novo para a linha 16", no notebook 02, deixa a comparação
+  exemplo novo para o índice 16", no notebook 02, deixa a comparação
   pronta para rodar no seu modelo. É a lição central da camada 2.
 
 ## Dicas de execução
@@ -185,6 +194,9 @@ do notebook registra o modelo usado):
   alcance.
 - O custo aparece em tokens: `last_usage()` mostra a última chamada e
   `usage_total()` o acumulado; multiplique pelo preço do provedor.
+- Os prompts de `01`, `02` e `bonus_evals` são duplicados de propósito
+  para cada notebook ser auto-contido; ao mudar um, replique nos outros
+  para manter o placar comparável.
 - Tudo roda localmente, exceto a API de LLM; a demo 1/03 consulta a
   Wikipédia e a demo 2 usa os servers MCP (filesystem via npx, fetch e
   sqlite locais).
@@ -204,5 +216,5 @@ do notebook registra o modelo usado):
 
 ## Licença
 
-MIT: use, replique, teste e faça fork à vontade. Créditos são
-bem-vindos mas não são exigidos - o material é para exercitar.
+MIT: use, replique, teste e faça fork à vontade. O aviso de copyright
+da licença MIT deve ser mantido; créditos são bem-vindos.
