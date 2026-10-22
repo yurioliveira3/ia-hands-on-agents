@@ -11,7 +11,7 @@ dentro, com dados de verdade.
 | Demo | O que você encontra | Comece por |
 |---|---|---|
 | [Demo 1](demo-1/) — da engenharia de prompt ao agente | 4 notebooks: zero-shot, few-shot, laço do agente à mão e evals | [01_zero_shot.ipynb](demo-1/01_zero_shot.ipynb) |
-| [Demo 2](demo-2/) — top-3 MCPs criando e lendo em destinos | roteiro guiado + prompts em 3 níveis, no Claude Code ou OpenCode | [roteiro-demo-2.md](demo-2/roteiro-demo-2.md) |
+| [Demo 2](demo-2/) — top-3 MCPs criando e lendo em destinos | roteiro guiado + prompts em 3 níveis: [simples](demo-2/prompts/prompt-simples.md), [médio](demo-2/prompts/prompt-medio.md) e [avançado](demo-2/prompts/prompt-avancado.md) | [roteiro-demo-2.md](demo-2/roteiro-demo-2.md) |
 
 Tese central: o modelo é uma peça substituível - trocar de provedor é
 editar três linhas do .env; a engenharia que permanece é prompt,
