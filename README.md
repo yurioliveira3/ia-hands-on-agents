@@ -1,8 +1,17 @@
 # IA Hands-on: da engenharia de prompt ao agente
 
 Material prático, nascido de uma sessão ao vivo e pensado para ser
-re-executado pelo dev. A narrativa: da engenharia de prompt ao agente,
-visto por dentro, com dados de verdade.
+re-executado pelo dev: da engenharia de prompt ao agente, visto por
+dentro, com dados de verdade.
+
+**Atalhos:** [Setup](#setup) · [Passo a passo](#passo-a-passo) ·
+[Síntese por camada](#síntese-por-camada) · [Referências](#referências)
+— ou vá direto a uma demo:
+
+| Demo | O que você encontra | Comece por |
+|---|---|---|
+| [Demo 1](demo-1/) — da engenharia de prompt ao agente | 4 notebooks: zero-shot, few-shot, laço do agente à mão e evals | [01_zero_shot.ipynb](demo-1/01_zero_shot.ipynb) |
+| [Demo 2](demo-2/) — top-3 MCPs criando e lendo em destinos | roteiro guiado + prompts em 3 níveis, no Claude Code ou OpenCode | [roteiro-demo-2.md](demo-2/roteiro-demo-2.md) |
 
 Tese central: o modelo é uma peça substituível - trocar de provedor é
 editar três linhas do .env; a engenharia que permanece é prompt,
@@ -21,11 +30,11 @@ usa os nomes das nossas camadas):
 
 | Camada do desenho | Onde aparece | Arquivo |
 |---|---|---|
-| Engenharia de contexto (teal) | zero-shot (camada 1) e few-shot (camada 2): tudo que entra na janela do modelo | demo-1/01, demo-1/02 |
-| Laço do agente | o run_agent à mão: decidir, agir, observar, responder | demo-1/03 |
-| Orquestração | ferramentas coordenadas por um catálogo padrão (MCP): filesystem, sqlite, fetch | demo-2 |
-| Armação (harness) | a CLI do agente que conecta tudo: Claude Code ou OpenCode, permissões, segredos | demo-2/.mcp.json, demo-2/opencode.json, .env |
-| Envelope (evals, custo) | como saber que funciona sem achar: suíte com gabarito e tokens por execução | demo-1/bonus_evals |
+| Engenharia de contexto (teal) | zero-shot (camada 1) e few-shot (camada 2): tudo que entra na janela do modelo | [demo-1/01](demo-1/01_zero_shot.ipynb), [demo-1/02](demo-1/02_few_shot.ipynb) |
+| Laço do agente | o run_agent à mão: decidir, agir, observar, responder | [demo-1/03](demo-1/03_agent_loop.ipynb) |
+| Orquestração | ferramentas coordenadas por um catálogo padrão (MCP): filesystem, sqlite, fetch | [demo-2](demo-2/roteiro-demo-2.md) |
+| Armação (harness) | a CLI do agente que conecta tudo: Claude Code ou OpenCode, permissões, segredos | [demo-2/.mcp.json](demo-2/.mcp.json.example), [demo-2/opencode.json](demo-2/opencode.json.example), [.env](.env.example) |
+| Envelope (evals, custo) | como saber que funciona sem achar: suíte com gabarito e tokens por execução | [demo-1/bonus_evals](demo-1/bonus_evals.ipynb) |
 
 ### A lógica de dentro para fora
 
@@ -55,10 +64,10 @@ dentro de framework):
 
 | Nível | Quem decide | Onde ler no código |
 |---|---|---|
-| O modelo decide acabou | o turno com `{"answer": ...}` encerra o laço; só uma `tool` gera a próxima volta | demo-1/03, `run_agent`: `if 'answer' in acao: return` |
-| O freio (guardrail) | o teto de voltas protege do agente perdido; estourou, devolve `'(limite de passos atingido)'` | demo-1/03, `run_agent(..., max_steps=6)` |
-| A resposta em si | `finish_reason` da API: `stop` concluiu; `length` = orçamento de tokens estourou (o `llm.py` levanta erro mesmo com conteúdo parcial) | llm.py, bloco `finish_reason` |
-| A infraestrutura | 429 do free tier: até 4 tentativas com backoff; persistindo, o erro sobe | llm.py, bloco retry |
+| O modelo decide acabou | o turno com `{"answer": ...}` encerra o laço; só uma `tool` gera a próxima volta | [demo-1/03](demo-1/03_agent_loop.ipynb), `run_agent`: `if 'answer' in acao: return` |
+| O freio (guardrail) | o teto de voltas protege do agente perdido; estourou, devolve `'(limite de passos atingido)'` | [demo-1/03](demo-1/03_agent_loop.ipynb), `run_agent(..., max_steps=6)` |
+| A resposta em si | `finish_reason` da API: `stop` concluiu; `length` = orçamento de tokens estourou (o `llm.py` levanta erro mesmo com conteúdo parcial) | [llm.py](llm.py), bloco `finish_reason` |
+| A infraestrutura | 429 do free tier: até 4 tentativas com backoff; persistindo, o erro sobe | [llm.py](llm.py), bloco retry |
 
 A intuição que vale levar: o custo da parada errada é assimétrico.
 Parar cedo demais entrega resposta vazia; parar tarde demais entrega
@@ -91,7 +100,12 @@ podcast-ia-hands-on/
     .mcp.json.example     template dos 3 servers MCP para Claude Code
     opencode.json.example template equivalente para OpenCode
     roteiro-demo-2.md     passo a passo da demonstração ao vivo
+    prompts/              o roteiro em 3 níveis: simples, medio e avancado
 ```
+
+Todos os notebooks e arquivos citados estão linkados nas tabelas
+[mapa de camadas](#o-mapa-das-camadas) e
+[passo a passo](#passo-a-passo).
 
 ## Setup
 
@@ -177,13 +191,13 @@ Siga na ordem; cada passo depende só do setup e do `.env`.
 
 | Passo | Notebook | O que acontece | Experimente |
 |---|---|---|---|
-| 1. Zero-shot | demo-1/01 | classificador sem exemplos: erra as armadilhas | trocar o índice de uma linha no CSV e reexecutar |
-| 2. Few-shot | demo-1/02 | 4 âncoras mudam o placar; o erro do índice 16 resiste | comentar uma âncora e comparar o placar |
-| 2b. Tuning de amostragem | demo-1/02 | 2 configs x 3 rodadas: parâmetros não consertam | trocar temp=1.0 por top_p=0.5 e comparar |
-| 2c. Exemplo novo | demo-1/02 | a intervenção que faltava: um quinto exemplo + regra para o índice 16 | comparar o placar de 15/16/17 |
-| 3. Agente à mão | demo-1/03 | o laço decidir/agir/observar sem framework | perguntar outra coisa que use a terceira tool (Wikipedia) |
-| 4. Evals (bônus) | demo-1/bonus_evals | suíte com gabarito: score por prompt | trocar uma âncora e comparar os dois scores |
-| 5. MCP | demo-2 | o dado criado, gravado e relido; o fetch soma um externo | subir no Claude Code/OpenCode e trocar a pergunta |
+| 1. Zero-shot | [demo-1/01](demo-1/01_zero_shot.ipynb) | classificador sem exemplos: erra as armadilhas | trocar o índice de uma linha no CSV e reexecutar |
+| 2. Few-shot | [demo-1/02](demo-1/02_few_shot.ipynb) | 4 âncoras mudam o placar; o erro do índice 16 resiste | comentar uma âncora e comparar o placar |
+| 2b. Tuning de amostragem | [demo-1/02](demo-1/02_few_shot.ipynb) | 2 configs x 3 rodadas: parâmetros não consertam | trocar temp=1.0 por top_p=0.5 e comparar |
+| 2c. Exemplo novo | [demo-1/02](demo-1/02_few_shot.ipynb) | a intervenção que faltava: um quinto exemplo + regra para o índice 16 | comparar o placar de 15/16/17 |
+| 3. Agente à mão | [demo-1/03](demo-1/03_agent_loop.ipynb) | o laço decidir/agir/observar sem framework | perguntar outra coisa que use a terceira tool (Wikipedia) |
+| 4. Evals (bônus) | [demo-1/bonus_evals](demo-1/bonus_evals.ipynb) | suíte com gabarito: score por prompt | trocar uma âncora e comparar os dois scores |
+| 5. MCP | [demo-2](demo-2/roteiro-demo-2.md) | o dado criado, gravado e relido; o fetch soma um externo | subir no Claude Code/OpenCode e trocar a pergunta |
 
 Os índices citados são posições 0-based do DataFrame usado no notebook
 (`df.iloc`). No arquivo CSV, a linha física é o índice + 2 (por causa do
