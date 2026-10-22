@@ -1,4 +1,4 @@
-.PHONY: setup env test notebooks evals demo2-config clean
+.PHONY: setup env test notebooks evals demo2-setup demo2-config clean
 
 setup:
 	uv sync --locked
@@ -20,6 +20,10 @@ notebooks: env
 evals: env
 	uv run --locked --env-file .env jupyter nbconvert --to notebook --execute demo-1/bonus_evals.ipynb --output-dir export
 	@echo "notebook executado em export/bonus_evals.ipynb"
+
+demo2-setup:
+	uv tool install --reinstall mcp-server-fetch
+	uv tool install --reinstall mcp-server-sqlite --with "mcp<2"
 
 demo2-config:
 	@if [ -f demo-2/.mcp.json ]; then \

@@ -17,14 +17,18 @@ Servers dos configs gerados (`.mcp.json` para Claude Code,
 
 1. Pré-requisitos: Node.js 20+ com npx (o server filesystem está
    pinado em `1.0.0`; a linha `2.0.0` exige Node 24) e dois servers
-   Python, um pacote por comando:
+   Python, um pacote por comando - ou `make demo2-setup`, que roda
+   os mesmos comandos de uma vez:
    ```
    uv tool install mcp-server-fetch
-   uv tool install mcp-server-sqlite
+   uv tool install mcp-server-sqlite --with 'mcp<2'
    ```
-   Os comandos `mcp-server-fetch` e `mcp-server-sqlite` precisam ficar
-   no PATH (o `uv tool` instala em `~/.local/bin`; verificar com
-   `which`).
+   O pin `mcp<2` importa: sem ele o uv resolve um `mcp` 2.x, e a
+   linha 2.x removeu a API que o sqlite server (2025.4.25) usa
+   (lowlevel `Server` com `list_resources`) - o processo quebra
+   antes de responder ao protocolo. Os comandos `mcp-server-fetch`
+   e `mcp-server-sqlite` precisam ficar no PATH (o `uv tool`
+   instala em `~/.local/bin`; verificar com `which`).
 2. Rodar `make demo2-config` na raiz do projeto: gera
    `demo-2/.mcp.json` e `demo-2/opencode.json` com o caminho absoluto
    da pasta (a partir dos templates versionados; não sobrescreve os
@@ -48,27 +52,37 @@ Servers dos configs gerados (`.mcp.json` para Claude Code,
 | 2 (~1,5 min) | "Analise reclamacoes.csv e grave `resumo.md` na pasta com as principais categorias" | o server filesystem escrevendo um arquivo que fica visível no editor |
 | 3 (~1 min) | "Grave em podcast.sqlite uma tabela top3 com as 3 categorias mais frequentes e as contagens" | o server sqlite criando a tabela |
 | 4 (~1 min) | "Leia o resumo.md e a tabela top3 e me diga em uma frase o maior problema" | o LLM lendo de volta os próprios artefatos |
-| 5 (30 s) | opcional: "Busque em <url pública> um dado externo e junte ao resumo" | o fetch somando um destino remoto |
+| 5 (30 s) | opcional (só na versão separada): "Busque em https://economia.awesomeapi.com.br/json/last/USD-BRL a cotação do dólar e acrescente ao resumo" | o fetch somando um destino remoto |
 
 ## O prompt de ponta a ponta (mão livre)
 
 Passos 2 a 4 separados provam cada destino; o prompt abaixo prova o
 conjunto: uma única instrução, o agente planeja a ordem, usa os três
-servers e lê de volta o que criou - sem pedir cada etapa. Cole e
-deixe girar até terminar:
+servers (filesystem, sqlite e fetch) e lê de volta o que criou - sem
+pedir cada etapa. Cole e deixe girar até terminar:
 
 ```
-Leia reclamacoes.csv e faça o ciclo completo:
-1. escreva um resumo.md com as categorias e suas contagens;
-2. crie em podcast.sqlite uma tabela top3 com as três categorias
-   mais frequentes e suas contagens;
-3. leia de volta o resumo.md e a tabela top3 e responda em uma
-   frase qual é o maior problema da base, citando os números.
+Leia reclamacoes.csv (nesta pasta) e faça o ciclo completo usando os
+três MCPs — filesystem, sqlite e fetch:
+1. escreva um resumo.md em markdown (com tabela) contendo as
+   categorias, suas contagens e o total;
+2. crie em podcast.sqlite uma tabela top3 com as três categorias mais
+   frequentes e suas contagens; em caso de empate, ordene
+   alfabeticamente e registre a decisão;
+3. busque em https://economia.awesomeapi.com.br/json/last/USD-BRL a
+   cotação do dólar e acrescente esse dado externo ao resumo.md;
+4. leia de volta o resumo.md e a tabela top3 e responda em uma frase
+   qual é a categoria com mais reclamações, citando os números;
+5. ao final, liste quais MCPs você usou.
 ```
 
 Na tela, o que se vê é o agente decidindo a sequência sozinho
-(escrever → gravar → reabrir os artefatos e concluir): a camada 3 da
-demo 1 acontecendo sobre o catálogo MCP.
+(escrever → gravar → buscar externo → reabrir os artefatos e concluir):
+a camada 3 da demo 1 acontecendo sobre o catálogo MCP. A URL do
+ AwesomeAPI é pública, sem chave de API, e devolve um JSON com a
+cotação USD/BRL — dado que conversa com o tema (reclamações de
+cobrança de um e-commerce). O "liste quais MCPs você usou" do item 5
+serve de prova visual de que os três servers entraram no fluxo.
 
 ## Pontos de fala
 
