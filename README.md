@@ -25,7 +25,7 @@ usa os nomes das nossas camadas):
 | Laço do agente | o run_agent à mão: decidir, agir, observar, responder | demo-1/03 |
 | Orquestração | ferramentas coordenadas por um catálogo padrão (MCP): filesystem, sqlite, fetch | demo-2 |
 | Armação (harness) | a CLI do agente que conecta tudo: Claude Code ou OpenCode, permissões, segredos | demo-2/.mcp.json, demo-2/opencode.json, .env |
-| Envelope (evals, custo) | como saber que funciona sem achar: suíte com gabarito | demo-1/bonus_evals |
+| Envelope (evals, custo) | como saber que funciona sem achar: suíte com gabarito e tokens por execução | demo-1/bonus_evals |
 
 ### A lógica de dentro para fora
 
@@ -57,7 +57,7 @@ dentro de framework):
 |---|---|---|
 | O modelo decide acabou | o turno com `{"answer": ...}` encerra o laço; só uma `tool` gera a próxima volta | demo-1/03, `run_agent`: `if 'answer' in acao: return` |
 | O freio (guardrail) | o teto de voltas protege do agente perdido; estourou, devolve `'(limite de passos atingido)'` | demo-1/03, `run_agent(..., max_steps=6)` |
-| A resposta em si | `finish_reason` da API: `stop` concluiu; `length` = orçamento de tokens estourou (o `llm.py` levanta erro com conteúdo vazio) | llm.py, bloco `if not content` |
+| A resposta em si | `finish_reason` da API: `stop` concluiu; `length` = orçamento de tokens estourou (o `llm.py` levanta erro mesmo com conteúdo parcial) | llm.py, bloco `finish_reason` |
 | A infraestrutura | 429 do free tier: até 4 tentativas com backoff; persistindo, o erro sobe | llm.py, bloco retry |
 
 A intuição que vale levar: o custo da parada errada é assimétrico.
@@ -161,22 +161,33 @@ Siga na ordem; cada passo depende só do setup e do `.env`.
 | 1. Zero-shot | demo-1/01 | classificador sem exemplos: erra as armadilhas | trocar o índice de uma linha no CSV e reexecutar |
 | 2. Few-shot | demo-1/02 | 4 âncoras mudam o placar; o erro da linha 16 resiste | comentar uma âncora e ver a linha regredir |
 | 2b. Micro-tuning | demo-1/02 | 4 configs x 3 rodadas: parâmetros não consertam | adicionar outra configuração à lista |
+| 2c. Exemplo novo | demo-1/02 | a intervenção que faltava: um quinto exemplo para a linha 16 | comparar o placar de 15/16/17 |
 | 3. Agente à mão | demo-1/03 | o laço decidir/agir/observar sem framework | perguntar outra coisa que use a terceira tool (Wikipedia) |
 | 4. Evals (bônus) | demo-1/bonus_evals | suíte com gabarito: score por prompt | descomentar a suíte few-shot e comparar |
 | 5. MCP | demo-2 | mesmo dado indo e voltando por 3 destinos | subir no Claude Code/OpenCode e trocar a pergunta |
 
-Resultado empírico validado em rodadas repetidas:
+Resultado empírico observado (os números variam com o modelo; o output
+do notebook registra o modelo usado):
 - linhas 15 e 16 do CSV: armadilhas multimotivo; zero-shot erra sempre;
 - linhas 15 e 17 consertam de forma estável com os 4 exemplos few-shot;
 - linha 16: propositalmente sem âncora - o micro-tuning não salva
-  (placar 6/9 em qualquer configuração de amostragem); o exemplo novo
-  salva. É a lição central da camada 2.
+  (placar 6/9 em qualquer configuração de amostragem). A intervenção
+  é um exemplo novo que ensina a regra; a seção "Intervenção: um
+  exemplo novo para a linha 16", no notebook 02, deixa a comparação
+  pronta para rodar no seu modelo. É a lição central da camada 2.
 
 ## Dicas de execução
 
 - O `llm.py` já faz retry com backoff no 429 - a mensagem de espera em
   tela é conteúdo, não bug ("quotas são reais").
-- Tudo roda localmente; a única dependência externa é a API de LLM.
+- `exec_python` roda código gerado pelo modelo no seu processo, sem
+  sandbox; use ambiente descartável e não deixe dados sensíveis ao
+  alcance.
+- O custo aparece em tokens: `last_usage()` mostra a última chamada e
+  `usage_total()` o acumulado; multiplique pelo preço do provedor.
+- Tudo roda localmente, exceto a API de LLM; a demo 1/03 consulta a
+  Wikipédia e a demo 2 usa os servers MCP (filesystem via npx, fetch e
+  sqlite locais).
 
 ## Síntese por camada
 

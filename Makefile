@@ -1,7 +1,7 @@
 .PHONY: setup env test notebooks evals demo2-config clean
 
 setup:
-	uv sync
+	uv sync --locked
 
 env:
 	@if [ -f .env ]; then \
@@ -12,13 +12,13 @@ env:
 	fi
 
 test: env
-	uv run --env-file .env python -c "from llm import chat; print(chat([{'role': 'user', 'content': 'diga ok'}]))"
+	uv run --locked --env-file .env python -c "from llm import chat; print(chat([{'role': 'user', 'content': 'diga ok'}]))"
 
 notebooks: env
-	uv run --env-file .env jupyter lab
+	uv run --locked --env-file .env jupyter lab
 
 evals: env
-	uv run --env-file .env jupyter nbconvert --to notebook --execute demo-1/bonus_evals.ipynb --output-dir export
+	uv run --locked --env-file .env jupyter nbconvert --to notebook --execute demo-1/bonus_evals.ipynb --output-dir export
 	@echo "notebook executado em export/bonus_evals.ipynb"
 
 demo2-config:
