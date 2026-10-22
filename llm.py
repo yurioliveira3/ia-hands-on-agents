@@ -43,6 +43,33 @@ _DEFAULT_HEADERS = {
     "x-opencode-session": _SESSION_ID,
 }
 
+_USAGE_TOTAL = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
+_LAST_USAGE: dict | None = None
+
+
+def _registrar_uso(usage) -> None:
+    global _LAST_USAGE
+    if usage is None:
+        _LAST_USAGE = None
+        return
+    _LAST_USAGE = {
+        "prompt_tokens": getattr(usage, "prompt_tokens", 0) or 0,
+        "completion_tokens": getattr(usage, "completion_tokens", 0) or 0,
+        "total_tokens": getattr(usage, "total_tokens", 0) or 0,
+    }
+    for chave, valor in _LAST_USAGE.items():
+        _USAGE_TOTAL[chave] += valor
+
+
+def last_usage() -> dict | None:
+    """Tokens da última chamada, ou None se o provedor não informou."""
+    return dict(_LAST_USAGE) if _LAST_USAGE else None
+
+
+def usage_total() -> dict:
+    """Tokens acumulados neste processo (todas as chamadas de chat)."""
+    return dict(_USAGE_TOTAL)
+
 
 def chat(
     messages: list[dict],
@@ -66,9 +93,13 @@ def chat(
                    de trabalho para comparar execuções; valores altos
                    trocam repetibilidade por variedade.
       top_p: nucleus sampling (0.0 a 1.0). Descarta as palavras menos
-             prováveis fora do núcleo de candidatos.
-      top_k: limita as k palavras mais prováveis por passo. Nativo do
-             Gemini; muitos provedores OpenAI-compat não o expõem.
+             prováveis fora do núcleo de candidatos. top_k não é
+             parâmetro desta função: o endpoint OpenAI-compat não o
+             expõe; a discussão fica no notebook 02.
+
+    O consumo fica disponível em last_usage() (última chamada) e em
+    usage_total() (acumulado do processo); ambos vêm do campo usage da
+    resposta, quando o provedor o envia.
     """
     faltando = [var for var in ("LLM_API_KEY", "LLM_MODEL") if not os.environ.get(var)]
     if faltando:
@@ -108,15 +139,23 @@ def chat(
             print(f"(rate limit; aguardando {wait:.0f}s antes de tentar de novo)")
             time.sleep(wait)
 
+    _registrar_uso(getattr(response, "usage", None))
+
     choice = response.choices[0]
     content = choice.message.content
-    if not content:
+    finish = choice.finish_reason
+    if finish == "length":
         # Modelos 'thinking' alocam parte de max_tokens para raciocínio
-        # interno antes de escrever. Quando o orçamento estoura antes
-        # da escrita, content volta vazio com finish_reason=length.
+        # interno antes de escrever. O content pode vir vazio ou
+        # parcial; nos dois casos a resposta está truncada e não serve
+        # para o laço (um JSON de ação pela metade, por exemplo).
         raise RuntimeError(
-            f"Resposta vazia do modelo (finish_reason={choice.finish_reason}). "
-            "Provavelmente max_tokens baixo com modelo thinking: aumente o valor "
-            "(ou use um modelo sem thinking)."
+            f"Resposta truncada (finish_reason=length, max_tokens={max_tokens}). "
+            "Aumente max_tokens ou use um modelo sem thinking."
+        )
+    if not content:
+        raise RuntimeError(
+            f"Resposta vazia do modelo (finish_reason={finish}). "
+            "Confira o provedor e tente de novo."
         )
     return content
