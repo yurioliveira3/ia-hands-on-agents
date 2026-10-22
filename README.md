@@ -84,7 +84,7 @@ podcast-ia-hands-on/
   diagramas/              os 3 SVGs deste README (mesmo padrão visual)
   demo-1/                 Demo 1 - da engenharia de prompt ao agente
     01_zero_shot.ipynb    camada 1: classificador zero-shot, falha ao vivo
-    02_few_shot.ipynb     camada 2: poucos exemplos + micro-tuning
+    02_few_shot.ipynb     camada 2: poucos exemplos + tuning de amostragem
     03_agent_loop.ipynb   camada 3: o laço do agente escrito à mão
     bonus_evals.ipynb     camada 5 (bônus): eval-driven development
   demo-2/                 Demo 2 - top-3 MCPs criando e lendo em destinos
@@ -144,9 +144,8 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    make notebooks
    ```
 5. Rodar a suíte de evals com gabarito (gasta chamadas da API por
-   design; o alvo executa só o zero-shot, 11 chamadas; a suíte
-   few-shot está comentada e dobra o custo; sai em
-   `export/bonus_evals.ipynb`):
+   design; o alvo executa as duas suítes, 22 chamadas - 11 casos x 2
+   prompts; sai em `export/bonus_evals.ipynb`):
    ```
    make evals
    ```
@@ -167,7 +166,10 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    `demo-2/opencode.json` (OpenCode) com o caminho absoluto da sua
    pasta, e copia `data/reclamacoes.csv` para `demo-2/`.
    No Claude Code, confira com `/mcp`; no OpenCode, com
-   `opencode mcp list`.
+   `opencode mcp list`. Se já houver uma sessão OpenCode aberta na raiz
+   do repo, inicie com `opencode --standalone` na pasta demo-2: o
+   serviço compartilhado pode ficar ancorado na raiz e não carregar o
+   `opencode.json` local.
 
 ## Passo a passo
 
@@ -176,11 +178,11 @@ Siga na ordem; cada passo depende só do setup e do `.env`.
 | Passo | Notebook | O que acontece | Experimente |
 |---|---|---|---|
 | 1. Zero-shot | demo-1/01 | classificador sem exemplos: erra as armadilhas | trocar o índice de uma linha no CSV e reexecutar |
-| 2. Few-shot | demo-1/02 | 4 âncoras mudam o placar; o erro do índice 16 resiste | comentar uma âncora e ver o índice regredir |
-| 2b. Micro-tuning | demo-1/02 | 4 configs x 3 rodadas: parâmetros não consertam | adicionar outra configuração à lista |
-| 2c. Exemplo novo | demo-1/02 | a intervenção que faltava: um quinto exemplo para o índice 16 | comparar o placar de 15/16/17 |
+| 2. Few-shot | demo-1/02 | 4 âncoras mudam o placar; o erro do índice 16 resiste | comentar uma âncora e comparar o placar |
+| 2b. Tuning de amostragem | demo-1/02 | 2 configs x 3 rodadas: parâmetros não consertam | trocar temp=1.0 por top_p=0.5 e comparar |
+| 2c. Exemplo novo | demo-1/02 | a intervenção que faltava: um quinto exemplo + regra para o índice 16 | comparar o placar de 15/16/17 |
 | 3. Agente à mão | demo-1/03 | o laço decidir/agir/observar sem framework | perguntar outra coisa que use a terceira tool (Wikipedia) |
-| 4. Evals (bônus) | demo-1/bonus_evals | suíte com gabarito: score por prompt | descomentar a suíte few-shot e comparar |
+| 4. Evals (bônus) | demo-1/bonus_evals | suíte com gabarito: score por prompt | trocar uma âncora e comparar os dois scores |
 | 5. MCP | demo-2 | o dado criado, gravado e relido; o fetch soma um externo | subir no Claude Code/OpenCode e trocar a pergunta |
 
 Os índices citados são posições 0-based do DataFrame usado no notebook
@@ -189,13 +191,15 @@ cabeçalho); o índice 15, por exemplo, é a linha 17 do arquivo.
 
 Resultado empírico observado (os números variam com o modelo; o output
 do notebook registra o modelo usado):
-- índices 15 e 16 do DataFrame: armadilhas multimotivo; zero-shot erra sempre;
-- índices 15 e 17: consertam de forma estável com os 4 exemplos few-shot;
-- índice 16: propositalmente sem âncora - o micro-tuning não salva
-  (placar 6/9 em qualquer configuração de amostragem). A intervenção
-  é um exemplo novo que ensina a regra; a seção "Intervenção: um
+- índices 15 e 16 do DataFrame: armadilhas multimotivo; zero-shot erra os dois;
+- índices 15 e 17: consertam de forma estável com a regra e as 4 âncoras;
+- índice 16: propositalmente sem âncora - o tuning de amostragem não
+  salva (placar 6/9 em qualquer configuração). A intervenção é um
+  exemplo novo e uma regra explícita; a seção "Intervenção: um
   exemplo novo para o índice 16", no notebook 02, deixa a comparação
   pronta para rodar no seu modelo. É a lição central da camada 2.
+- suíte de evals: zero-shot 82%, few-shot 91% (11 casos); o índice 16
+  segue errado nos dois.
 
 ## Dicas de execução
 

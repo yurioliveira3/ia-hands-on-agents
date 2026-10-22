@@ -9,7 +9,7 @@ declara.
 
 ```
 Leia o arquivo reclamacoes.csv nesta pasta e produza três entregas
-usa os MCPs filesystem, sqlite e fetch. Não improvise formatos: a
+usando os MCPs filesystem, sqlite e fetch. Não improvise formatos: a
 saída mínima aceitável está definida abaixo em "Contrato de saída".
 
 ## Contrato de saída
@@ -32,7 +32,7 @@ saída mínima aceitável está definida abaixo em "Contrato de saída".
 
 - Categorias por frequência; empate -> ordem alfabética; registre a
   regra usada como comentário em resumo.md.
-- Não eduque: se faltar dado, diga o que falta e pare.
+- Não invente: se faltar dado, diga o que falta e pare.
 - Lista final de MCPs usados na última linha da resposta.
 ```
 

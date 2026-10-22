@@ -35,8 +35,10 @@ Servers dos configs gerados (`.mcp.json` para Claude Code,
    existentes) e copia `data/reclamacoes.csv` para `demo-2/`.
 3. Claude Code: o `.mcp.json` gerado na pasta demo-2 é lido
    automaticamente ao iniciar `claude` dentro dessa pasta.
-   OpenCode: o `opencode.json` gerado é lido ao iniciar `opencode` na
-   mesma pasta.
+   OpenCode: o `opencode.json` gerado é lido ao iniciar
+   `opencode --standalone` na mesma pasta. O `--standalone` evita
+   anexar ao serviço compartilhado, que pode estar ancorado na raiz do
+   repo e não enxergar o config local.
 4. Claude Code: rodar `/mcp` para conferir os três servers.
    OpenCode: rodar `opencode mcp list` na pasta para listar os servers
    configurados.
@@ -48,7 +50,7 @@ Servers dos configs gerados (`.mcp.json` para Claude Code,
 
 | Passo | O que o dev digita | O que aparece na tela |
 |---|---|---|
-| 1 | abrir `claude` e rodar `/mcp` (ou `opencode` e `opencode mcp list`) na pasta | os 3 servers conectados surgem sozinhos |
+| 1 | abrir `claude` e rodar `/mcp` (ou `opencode --standalone` e `opencode mcp list`) na pasta | aprovar os 3 servers do `.mcp.json` no primeiro uso (Claude Code) e conferir com `opencode mcp list` (OpenCode) |
 | 2 | "Analise reclamacoes.csv e grave `resumo.md` na pasta com as principais categorias" | o server filesystem escrevendo um arquivo que fica visível no editor |
 | 3 | "Grave em podcast.sqlite uma tabela top3 com as 3 categorias mais frequentes e as contagens" | o server sqlite criando a tabela |
 | 4 | "Leia o resumo.md e a tabela top3 e me diga em uma frase o maior problema" | o LLM lendo de volta os próprios artefatos |
@@ -72,6 +74,10 @@ com uma nota de "o que a plateia espera ver":
 | Simples | `prompts/prompt-simples.md` | o ciclo completo em uma instrução única, sem contrato de saída - o agente decide tudo |
 | Médio | `prompts/prompt-medio.md` | "contrato de saída": entregas nomeadas, estrutura exata do resumo.md, schema da tabela, regras de desempate - prompt como especificação |
 | Avançado | `prompts/prompt-avancado.md` | template reutilizável com few-shots, estilo de saída e variáveis `{{CSV_PATH}}`, `{{PASTA_SAIDA}}`, `{{URL_EXTERNA}}` - troca as chaves (mesma técnica `sed` do `make demo2-config`) e roda em outra base sem reescrever |
+
+Se for rodar mais de um nível, rode `make clean` e `make demo2-config`
+antes de cada um: os níveis usam nomes de artefatos diferentes e o
+segundo run pode ler o resultado do primeiro.
 
 No nível simples, na tela o que se vê é o agente decidindo a sequência
 sozinho (escrever → gravar → buscar externo → reabrir os artefatos e
