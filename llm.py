@@ -94,7 +94,7 @@ def chat(
     messages: list[dict],
     temperature: float | None = None,
     top_p: float | None = None,
-    max_tokens: int = 800,
+    max_tokens: int = 1200,
 ) -> str:
     """Chamada agnóstica: qualquer endpoint compatível com o padrão OpenAI.
 
