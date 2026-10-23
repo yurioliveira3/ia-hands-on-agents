@@ -138,11 +138,11 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    - `LLM_API_KEY` - chave do provedor
    - `LLM_MODEL` - nome do modelo
    - `LLM_BASE_URL` - base do endpoint (padrão OpenAI-compatible)
-   - OpenCode Go (recomendado):
-     `https://opencode.ai/inference/go/openai/v1/` com um modelo free
-     (ex.: `minimax-m3.1-flash-free`). O plano Go é pago (US$10/mês na
-     data deste material) e o modelo free tem limite de uso; confira a
-     oferta atual no console.
+   - OpenCode Go (padrão do `.env.example`):
+     `https://opencode.ai/inference/go/openai/v1/` com `deepseek-v4.1-flash`
+     ou, para um modelo free, `minimax-m3.1-flash-free`. O plano Go é
+     pago (US$10/mês na data deste material) e o modelo free tem limite
+     de uso; confira a oferta e os modelos atuais no console.
    - OpenRouter: `https://openrouter.ai/api/v1/` com um modelo `:free`
      (a lista muda com frequência: ver https://openrouter.ai/models)
    - Gemini free: `https://generativelanguage.googleapis.com/v1beta/openai/`
