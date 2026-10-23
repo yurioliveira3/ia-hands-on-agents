@@ -25,6 +25,11 @@ make test       # caminho feliz (consome uma chamada pequena)
 make notebooks  # abrir os notebooks
 ```
 
+No VS Code, selecione o kernel `.venv` do projeto (**Select Kernel** >
+**Python Environments...** > `.venv`). Se o editor pedir para instalar o
+`ipykernel`, ele está num Python que não é o do projeto: veja o passo 4
+do [Setup](../README.md#setup).
+
 ## Dicas desta pasta
 
 - Os placares citados vêm do output salvo nos notebooks; os seus variam
