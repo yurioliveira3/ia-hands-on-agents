@@ -157,6 +157,15 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    ```
    make notebooks
    ```
+   Para abrir no VS Code, o kernel precisa ser o `.venv` do projeto
+   (o repo traz `.vscode/settings.json` apontando para ele). Se aparecer
+   `Running cells with 'Python 3.x' requires the ipykernel package`, o
+   editor escolheu outro Python: não rode o `pip install` sugerido,
+   que instala no Python global e deixa o notebook sem `openai` e
+   `pandas`. Em **Select Kernel**, escolha **Python Environments...** e
+   `.venv`; se não aparecer, rode `Developer: Reload Window` ou use
+   **Enter interpreter path...** com `.venv/bin/python`. O `.env` não
+   precisa ser configurado no editor: o `llm.py` o lê sozinho.
 5. Rodar a suíte de evals com gabarito (gasta chamadas da API por
    design; o alvo executa as duas suítes, 22 chamadas - 11 casos x 2
    prompts; sai em `export/bonus_evals.ipynb`):
