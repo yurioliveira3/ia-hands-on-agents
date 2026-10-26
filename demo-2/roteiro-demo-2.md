@@ -52,7 +52,7 @@ Servers dos configs gerados (`.mcp.json` para Claude Code,
 |---|---|---|
 | 1 | abrir `claude` e rodar `/mcp` (ou `opencode --standalone` e `opencode mcp list`) na pasta | aprovar os 3 servers do `.mcp.json` no primeiro uso (Claude Code) e conferir com `opencode mcp list` (OpenCode) |
 | 2 | "Analise reclamacoes.csv e grave `resumo.md` na pasta com as principais categorias" | o server filesystem escrevendo um arquivo que fica visível no editor |
-| 3 | "Grave em podcast.sqlite uma tabela top3 com as 3 categorias mais frequentes e as contagens" | o server sqlite criando a tabela |
+| 3 | "Grave em demo.sqlite uma tabela top3 com as 3 categorias mais frequentes e as contagens" | o server sqlite criando a tabela |
 | 4 | "Leia o resumo.md e a tabela top3 e me diga em uma frase o maior problema" | o LLM lendo de volta os próprios artefatos |
 | 5 | opcional (só na versão separada): "Busque em https://economia.awesomeapi.com.br/json/last/USD-BRL a cotação do dólar e acrescente ao resumo" | o fetch somando um destino remoto |
 

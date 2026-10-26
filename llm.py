@@ -61,7 +61,7 @@ def _headers(base_url: str) -> dict:
     if "opencode.ai" not in base_url:
         return {}
     return {
-        "User-Agent": "podcast-demo/1.0",
+        "User-Agent": "ia-hands-on-agents/1.0",
         "x-opencode-session": _SESSION_ID,
     }
 

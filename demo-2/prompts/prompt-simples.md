@@ -9,7 +9,7 @@ Leia reclamacoes.csv (nesta pasta) e faça o ciclo completo usando os
 três MCPs — filesystem, sqlite e fetch:
 1. escreva um resumo.md em markdown (com tabela) contendo as
    categorias, suas contagens e o total;
-2. crie em podcast.sqlite uma tabela top3 com as três categorias mais
+2. crie em demo.sqlite uma tabela top3 com as três categorias mais
    frequentes e suas contagens; em caso de empate, ordene
    alfabeticamente e registre a decisão;
 3. busque em https://economia.awesomeapi.com.br/json/last/USD-BRL a
@@ -32,5 +32,5 @@ Saída esperada (com a base de 18 reclamações do projeto):
   categorias (cobranca 5, entrega 4, app/atendimento/produto 3),
   com a cotação USD/BRL buscada no fetch (~5,02 na coleta de
   referência).
-- `podcast.sqlite` com a tabela `top3`: cobranca (5), entrega (4) e
+- `demo.sqlite` com a tabela `top3`: cobranca (5), entrega (4) e
   a primeira categoria em ordem alfabética entre as que têm 3.

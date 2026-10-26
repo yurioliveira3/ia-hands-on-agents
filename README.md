@@ -81,7 +81,7 @@ de custo.
 ## Estrutura
 
 ```
-podcast-ia-hands-on/
+ia-hands-on-agents/
   Makefile                setup re-executavel: make setup/env/test/notebooks/evals/demo2-config
                           clean remove os artefatos gerados
   pyproject.toml          dependencias declaradas (gerenciadas pelo uv)
