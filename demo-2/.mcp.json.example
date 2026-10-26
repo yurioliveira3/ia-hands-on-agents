@@ -6,7 +6,7 @@
     },
     "sqlite": {
       "command": "mcp-server-sqlite",
-      "args": ["--db-path", "{{DEMO2_DIR}}/podcast.sqlite"]
+      "args": ["--db-path", "{{DEMO2_DIR}}/demo.sqlite"]
     },
     "fetch": {
       "command": "mcp-server-fetch",

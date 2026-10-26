@@ -40,5 +40,5 @@ Confirme os servers com `/mcp` (Claude Code) ou `opencode mcp list`
   serviço compartilhado pode ficar ancorado na raiz e não carregar o
   `opencode.json` local.
 - As saídas geradas (`.mcp.json`, `opencode.json`, `reclamacoes.csv`,
-  `podcast.sqlite`, `resumo.md`) não são versionadas; `make clean`
+  `demo.sqlite`, `resumo.md`) não são versionadas; `make clean`
   remove tudo.

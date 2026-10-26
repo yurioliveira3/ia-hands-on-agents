@@ -22,7 +22,7 @@ saída mínima aceitável está definida abaixo em "Contrato de saída".
    - Seção "Dado externo" com a cotação USD/BRL buscada na
      https://economia.awesomeapi.com.br/json/last/USD-BRL e a
      data/hora da coleta.
-2. database podcast.sqlite: tabela top3 (colunas: categoria TEXT,
+2. database demo.sqlite: tabela top3 (colunas: categoria TEXT,
    contagem INTEGER, percentual REAL) com exatamente 3 linhas.
 3. Resposta final no chat, com no máximo 3 linhas: a categoria líder
    com a contagem e o percentual das duas maiores somadas — sem
@@ -47,7 +47,7 @@ Saída esperada (com a base de 18 reclamações do projeto):
   (cobranca 27,8%, entrega 22,2%, app 16,7%, atendimento 16,7%,
   produto 16,7%), linha de total, seção "Dado externo" com a cotação
   e data/hora, e a regra de desempate como comentário no arquivo.
-- `podcast.sqlite`: tabela `top3 (categoria, contagem, percentual)`
+- `demo.sqlite`: tabela `top3 (categoria, contagem, percentual)`
   com exatamente 3 linhas — cobranca 5/27,78, entrega 4/22,22,
   app 3/16,67.
 - No chat, no máximo 3 linhas: *"Categoria líder: cobrança, 5 de 18
