@@ -13,8 +13,9 @@ import requests
 # Cloudflare, que rejeita o User-Agent de biblioteca.
 from llm import _DEFAULT_HEADERS, _env
 
-# Mesmos defaults do .env.example; o .env sempre ganha, e a chave vazia
-# reusa a LLM_API_KEY do chat (verificado em 2026-10-28).
+# SPEC_DEVIATION: .env local sem JEV_* (arquivo do usuário intocado); fallback = defaults do .env.example
+# Razão: o fallback garante o make test-jev sem editar o .env do usuário.
+# O .env sempre ganha; a chave vazia reusa a LLM_API_KEY do chat (verificado em 2026-10-28).
 _DEFAULT_BASE_URL = "https://opencode.ai/inference/systemone/v1/systemone"
 _DEFAULT_MODEL = "jev-1.13-free"
 
