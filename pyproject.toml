@@ -9,4 +9,5 @@ dependencies = [
     "openai",
     "pandas",
     "jupyterlab",
+    "requests",
 ]

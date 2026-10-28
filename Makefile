@@ -1,4 +1,4 @@
-.PHONY: setup env test notebooks evals demo2-setup demo2-config clean
+.PHONY: setup env test test-jev notebooks evals demo2-setup demo2-config clean
 
 setup:
 	uv sync --locked
@@ -13,6 +13,9 @@ env:
 
 test: env
 	uv run --locked --env-file .env python -c "from llm import chat; print(chat([{'role': 'user', 'content': 'diga ok'}]))"
+
+test-jev: env
+	uv run --locked --env-file .env python -c "from jev import system_one, Noul; r = system_one('Cobraram o frete duas vezes na minha fatura do cartão', {'cobranca_duplicada': Noul('Esta reclamação fala de cobrança em duplicidade?')}); print(r); assert 0.0 <= r['cobranca_duplicada']['valor'] <= 1.0"
 
 notebooks: env
 	uv run --locked --env-file .env jupyter lab
