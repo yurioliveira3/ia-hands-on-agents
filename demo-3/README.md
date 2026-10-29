@@ -38,7 +38,7 @@ o output registra qual foi usado.
 - **Confiança em degraus, não numa curva:** a maioria volta com 1.0 e as
   linhas que fogem disso são justamente as que erram. Com threshold 0.9,
   17 das 18 resolvem sozinhas e uma vai para revisão humana — e é essa uma
-  que erra; o outro erro (0.96) passou pelo gate.
+  que erra; o outro erro (0.97) passou pelo gate.
 - **Custo real:** `usage_total()` fecha a demo inteira (triagem +
   experimentos) em ~13k tokens de input e `cost: 0` no modelo `-free`. No
   `jev-1.13` pago, a US$0.042/M de input, isso dá ~US$0.0006.
