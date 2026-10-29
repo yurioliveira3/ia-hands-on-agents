@@ -41,7 +41,8 @@ recordings/
 node_modules/
 
 # --- editors / OS ---
-.vscode/
+.vscode/*
+!.vscode/settings.json
 .idea/
 .DS_Store
 Thumbs.db

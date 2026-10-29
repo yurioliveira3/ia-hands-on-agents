@@ -53,14 +53,17 @@ _load_env(os.path.join(os.path.dirname(__file__), ".env"))
 # agrupar as rodadas do seu jeito.
 _SESSION_ID = _env("LLM_SESSION_ID") or str(uuid.uuid4())
 
-# Os dois headers abaixo são específicos do OpenCode Go: o session id
-# roteia a conversa e o User-Agent próprio evita ser tratado como
-# tráfego genérico de SDK. Outros provedores os ignoram; se algum
-# rejeitar headers desconhecidos, filtre aqui antes de criar o client.
-_DEFAULT_HEADERS = {
-    "User-Agent": "podcast-demo/1.0",
-    "x-opencode-session": _SESSION_ID,
-}
+def _headers(base_url: str) -> dict:
+    # Os dois headers abaixo são específicos do OpenCode Go: o session id
+    # roteia a conversa e o User-Agent próprio evita ser tratado como
+    # tráfego genérico de SDK. Só vão quando o endpoint é do OpenCode;
+    # os outros provedores recebem os headers padrão do SDK.
+    if "opencode.ai" not in base_url:
+        return {}
+    return {
+        "User-Agent": "ia-hands-on-agents/1.0",
+        "x-opencode-session": _SESSION_ID,
+    }
 
 _USAGE_TOTAL = {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0}
 _LAST_USAGE: dict | None = None
@@ -146,10 +149,11 @@ def chat(
     if top_p is not None:
         params["top_p"] = top_p
 
+    base_url = _env("LLM_BASE_URL")
     client = OpenAI(
-        base_url=_env("LLM_BASE_URL") or None,
+        base_url=base_url or None,
         api_key=_env("LLM_API_KEY"),
-        default_headers=_DEFAULT_HEADERS,
+        default_headers=_headers(base_url),
     )
 
     for attempt in range(4):

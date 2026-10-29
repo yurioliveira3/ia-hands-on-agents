@@ -1,5 +1,5 @@
 [project]
-name = "podcast-ia-hands-on"
+name = "ia-hands-on-agents"
 version = "0.1.0"
 description = "IA Hands-on: da engenharia de prompt ao agente"
 readme = "README.md"

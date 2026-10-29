@@ -8,7 +8,7 @@
       },
       "sqlite": {
         "type": "local",
-        "command": ["mcp-server-sqlite", "--db-path", "{{DEMO2_DIR}}/podcast.sqlite"]
+        "command": ["mcp-server-sqlite", "--db-path", "{{DEMO2_DIR}}/demo.sqlite"]
       },
       "fetch": {
         "type": "local",

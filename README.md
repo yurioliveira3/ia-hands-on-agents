@@ -87,7 +87,7 @@ de custo.
 ## Estrutura
 
 ```
-podcast-ia-hands-on/
+ia-hands-on-agents/
   Makefile                setup re-executavel: make setup/env/test/notebooks/evals/demo2-config/demo3-run
                           clean remove os artefatos gerados
   pyproject.toml          dependencias declaradas (gerenciadas pelo uv)
@@ -164,12 +164,12 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    - `LLM_API_KEY` - chave do provedor
    - `LLM_MODEL` - nome do modelo
    - `LLM_BASE_URL` - base do endpoint (padrão OpenAI-compatible)
-   - OpenCode Go (recomendado):
-     `https://opencode.ai/inference/go/openai/v1/` com um id sem `-free`
-     (ex.: `glm-5.3-flash`). O plano Go é pago (US$10/mês na data deste
-     material); os `-free` testados em 2026-10-28 responderam 400 nesse
-     path — free de chat é do cliente OpenCode. Confira a oferta atual
-     no console.
+   - OpenCode Go (padrão do `.env.example`):
+     `https://opencode.ai/inference/go/openai/v1/` com um id pago
+     (ex.: `deepseek-v4.1-flash` ou `glm-5.3-flash`). O plano Go é pago
+     (US$10/mês na data deste material); os `-free` testados em 2026-10-28
+     responderam 400 nesse path — free de chat é do cliente OpenCode.
+     Confira a oferta atual no console.
    - OpenRouter: `https://openrouter.ai/api/v1/` com um modelo `:free`
      (a lista muda com frequência: ver https://openrouter.ai/models)
    - Gemini free: `https://generativelanguage.googleapis.com/v1beta/openai/`
@@ -184,6 +184,15 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    ```
    make notebooks
    ```
+   Para abrir no VS Code, o kernel precisa ser o `.venv` do projeto
+   (o repo traz `.vscode/settings.json` apontando para ele). Se aparecer
+   `Running cells with 'Python 3.x' requires the ipykernel package`, o
+   editor escolheu outro Python: não rode o `pip install` sugerido,
+   que instala no Python global e deixa o notebook sem `openai` e
+   `pandas`. Em **Select Kernel**, escolha **Python Environments...** e
+   `.venv`; se não aparecer, rode `Developer: Reload Window` ou use
+   **Enter interpreter path...** com `.venv/bin/python`. O `.env` não
+   precisa ser configurado no editor: o `llm.py` o lê sozinho.
 5. Rodar a suíte de evals com gabarito (gasta chamadas da API por
    design; o alvo executa as duas suítes, 22 chamadas - 11 casos x 2
    prompts; sai em `export/bonus_evals.ipynb`):

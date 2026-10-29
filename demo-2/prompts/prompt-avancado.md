@@ -35,7 +35,7 @@ sqlite e fetch.
       de reembolso vs. dólar) — se a ligação for fraca, diga isso;
    5. Registro de método: regra de desempate, total de linhas lidas e
       a lista dos MCPs usados, cada MCP com a ferramenta chamada.
-2. database podcast.sqlite (a mesma configurada no server sqlite):
+2. database demo.sqlite (a mesma configurada no server sqlite):
    tabelas resumo_categoria (categoria, contagem, percentual) e
    insights (ordem, insight, categoria_apoio); se as tabelas já
    existirem, recrie-as do zero antes de gravar.
@@ -87,7 +87,7 @@ Saída esperada (com a base de 18 reclamações do projeto):
   mercado com a cotação e o aviso honesto se a ligação for fraca;
   registro de método (desempate alfabético, 18 linhas lidas, MCPs
   com as ferramentas chamadas).
-- `podcast.sqlite`: tabelas `resumo_categoria` e `insights`
+- `demo.sqlite`: tabelas `resumo_categoria` e `insights`
   recriadas do zero nos valores acima.
 - No chat, apenas 1 linha, conforme o few-shot 3: *"Parecer salvo
   em .../parecer.md. Categoria líder: cobranca (5/18, 28%).
