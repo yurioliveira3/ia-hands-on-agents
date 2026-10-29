@@ -110,7 +110,7 @@ podcast-ia-hands-on/
   demo-3/                 Demo 3 - decisão calibrada com System One (Jev)
     01_triagem_jev.ipynb  triagem tipada: uma chamada, quatro decisões
     02_agente_juiz.ipynb  o laço do demo-1 com um juiz na ação e na resposta
-    03_model_route.ipynb  o juiz escolhendo qual modelo responde cada passo
+    03_model_route.ipynb  o juiz rotula; a regra de confiança roteia o passo
     README.md             números medidos, setup e limitações do Jev
 ```
 
@@ -165,10 +165,11 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    - `LLM_MODEL` - nome do modelo
    - `LLM_BASE_URL` - base do endpoint (padrão OpenAI-compatible)
    - OpenCode Go (recomendado):
-     `https://opencode.ai/inference/go/openai/v1/` com um modelo free
-     (ex.: `minimax-m3.1-flash-free`). O plano Go é pago (US$10/mês na
-     data deste material) e o modelo free tem limite de uso; confira a
-     oferta atual no console.
+     `https://opencode.ai/inference/go/openai/v1/` com um id sem `-free`
+     (ex.: `glm-5.3-flash`). O plano Go é pago (US$10/mês na data deste
+     material); os `-free` testados em 2026-10-28 responderam 400 nesse
+     path — free de chat é do cliente OpenCode. Confira a oferta atual
+     no console.
    - OpenRouter: `https://openrouter.ai/api/v1/` com um modelo `:free`
      (a lista muda com frequência: ver https://openrouter.ai/models)
    - Gemini free: `https://generativelanguage.googleapis.com/v1beta/openai/`
@@ -236,7 +237,7 @@ Siga na ordem; cada passo depende só do setup e do `.env`.
 | 5. MCP | [demo-2](demo-2/roteiro-demo-2.md) | o dado criado, gravado e relido; o fetch soma um externo | subir no Claude Code/OpenCode e trocar a pergunta |
 | 6. Triagem tipada | [demo-3/01](demo-3/01_triagem_jev.ipynb) | uma chamada ao juiz, quatro decisões tipadas; placar 16/18 e a fila de revisão por threshold | mudar o threshold (0.9 → 0.5) e comparar a fila; traduzir as instruções |
 | 7. Agente com juiz | [demo-3/02](demo-3/02_agente_juiz.ipynb) | o laço do demo-1 com `Choice` na ação e `Noul` na resposta: aprovado, barrado fora do laço e teto de passos | desligar os dois gates (`gate_tool=None`) e repetir o pedido destrutivo |
-| 8. Model-route | [demo-3/03](demo-3/03_model_route.ipynb) | o juiz roteia cada mensagem entre forte e mini; economia ≈80% com concordância | afrouxar os critérios do mini e medir economia x qualidade |
+| 8. Model-route | [demo-3/03](demo-3/03_model_route.ipynb) | o juiz rotula cada mensagem e a regra de confiança decide entre forte e mini; economia ≈80% com concordância | afrouxar os critérios do mini e medir economia x qualidade |
 
 Os índices citados são posições 0-based do DataFrame usado no notebook
 (`df.iloc`). No arquivo CSV, a linha física é o índice + 2 (por causa do

@@ -11,7 +11,7 @@ o modelo mede, o código decide. O mapa completo das camadas está no
 |---|---|
 | [01_triagem_jev.ipynb](01_triagem_jev.ipynb) | uma chamada, 4 perguntas por reclamação (categoria, irritação, urgência, dados faltando); placar 16/18 e a fila de revisão definida por threshold |
 | [02_agente_juiz.ipynb](02_agente_juiz.ipynb) | o laço do demo-1 com o juiz nos dois pontos de decisão: `Choice` na ação e `Noul` na resposta; 3 execuções |
-| [03_model_route.ipynb](03_model_route.ipynb) | o juiz escolhendo qual modelo responde cada passo; economia ≈80% com concordância 5/5 entre os pares roteados |
+| [03_model_route.ipynb](03_model_route.ipynb) | o juiz rotulando cada mensagem e a regra de confiança decidindo quem responde; economia ≈80% com concordância 5/5 entre os pares roteados |
 
 ## Antes de rodar
 
@@ -67,12 +67,13 @@ variam com o modelo — o output registra qual foi usado.
   `gate_tool` barrar a ferramenta que resolveria a pergunta. O laço gastou
   7.474 tokens e o juiz 6.821 de entrada (163% do prompt do laço) em 9
   chamadas — o freio não é de graça, mas aqui custou `US$ 0.000000`.
-- **03 — model-route: economia ≈80%** de custo no mix de 6 prompts
-  (varia ~65–80% conforme o mix) com **concordância 5/5 entre os pares
-  roteados**; o 6/6 geral inclui 1 par em que o juiz escalou para o
-  forte×forte. O mini respondeu 5/6, e os gates de rota mais o juiz de
-  concordância custaram 0. É uma execução de referência: reexecute para
-  os seus números.
+- **03 — model-route: economia ≈80%** de custo no mix de 6 prompts da
+  execução de referência (2026-10-28); a versão afrouxada rendeu ≈84%. O
+  número varia com o mix e com o preço do par de modelos. A concordância
+  é **5/5 entre os pares roteados**; o 6/6 geral inclui 1 par em que o
+  juiz escalou para o forte×forte. O mini respondeu 5/6, e os gates de
+  rota mais o juiz de concordância custaram 0. É uma execução de
+  referência: reexecute para os seus números.
 - **Jagged edge do `score`:** o comportamento do upstream varia entre
   execuções. O notebook tenta a pergunta no formato `score` e registra o
   que aconteceu no dia (resposta ou erro), sem mock. No `-free`, o
@@ -89,9 +90,9 @@ variam com o modelo — o output registra qual foi usado.
   sobe. O fallback é `jev-1.13` (~US$0.042/M de entrada, saída grátis),
   que exige créditos na conta.
 - **Os modelos de chat `-free` do OpenCode exigem o cliente OpenCode.**
-  Fora dele, a mesma chamada costuma voltar 429 ou 400 (o `-free` é do
-  pay-as-you-go e responde 400 no path do plano Go). Por isso o mini do
-  model-route é `glm-5.3-flash`, um id pago do Go (~US$0.15/M de
+  Fora dele, a mesma chamada costuma voltar 429 ou 400: os ids `-free`
+  testados em 2026-10-28 responderam 400 no path do plano Go. Por isso o
+  mini do model-route é `glm-5.3-flash`, um id pago do Go (~US$0.15/M de
   entrada e US$0.50/M de saída no console em 2026-10-28).
 - **Alternativa: Jev via OpenRouter.** Troque no `.env`:
   `JEV_BASE_URL=https://openrouter.ai/api/v1/systemone`,
