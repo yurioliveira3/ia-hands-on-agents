@@ -95,6 +95,7 @@ def chat(
     temperature: float | None = None,
     top_p: float | None = None,
     max_tokens: int = 1200,
+    model: str | None = None,
 ) -> str:
     """Chamada agnóstica: qualquer endpoint compatível com o padrão OpenAI.
 
@@ -102,6 +103,9 @@ def chat(
       LLM_API_KEY   - chave do provedor
       LLM_BASE_URL  - base do endpoint
       LLM_MODEL     - nome do modelo
+
+    O parâmetro model tem preferência sobre LLM_MODEL e é o que permite
+    trocar de modelo por chamada (mini/forte) no demo-3, sem tocar no .env.
 
     Provedores e quotas (OpenCode Go, OpenRouter, Gemini, OpenAI):
     detalhes no .env.example e na seção "Chaves de API" do README.
@@ -120,7 +124,10 @@ def chat(
     usage_total() (acumulado do processo); ambos vêm do campo usage da
     resposta, quando o provedor o envia.
     """
-    faltando = [var for var in ("LLM_API_KEY", "LLM_MODEL") if not _env(var)]
+    faltando = [] if _env("LLM_API_KEY") else ["LLM_API_KEY"]
+    # Com model explícito, LLM_MODEL deixa de ser obrigatório.
+    if not model and not _env("LLM_MODEL"):
+        faltando.append("LLM_MODEL")
     if faltando:
         raise RuntimeError(
             "Variáveis faltando: " + ", ".join(faltando) + ". "
@@ -130,7 +137,7 @@ def chat(
         )
 
     params: dict = {
-        "model": _env("LLM_MODEL"),
+        "model": model or _env("LLM_MODEL"),
         "messages": messages,
         "max_tokens": max_tokens,
     }
