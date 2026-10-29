@@ -60,12 +60,13 @@ variam com o modelo — o output registra qual foi usado.
   pago, a US$0.042/M de entrada, isso dá menos de um décimo de centavo.
 - **02 — agente com juiz, 3 execuções:** o caminho feliz passa com o
   juiz aprovando (`p_interromper=0.00`) e encerrando a resposta (nota
-  0.98); o pedido destrutivo é barrado (`p_interromper=0.90`); e a
-  resposta apressada termina no **teto de passos**, depois de o
-  `gate_answer` devolver quatro vezes e o `gate_tool` barrar a
-  ferramenta que resolveria a pergunta. O laço gastou 7.474 tokens e o
-  juiz 6.821 de entrada (163% do prompt do laço) em 9 chamadas — o freio
-  não é de graça, mas aqui custou `US$ 0.000000`.
+  0.98); no pedido destrutivo o próprio modelo recusa **antes** de propor
+  a ação, e o juiz chamado **fora do laço** sobre ela devolve interromper
+  (`p_interromper=0.90`); e a resposta apressada termina no **teto de
+  passos**, depois de o `gate_answer` devolver quatro vezes e o
+  `gate_tool` barrar a ferramenta que resolveria a pergunta. O laço gastou
+  7.474 tokens e o juiz 6.821 de entrada (163% do prompt do laço) em 9
+  chamadas — o freio não é de graça, mas aqui custou `US$ 0.000000`.
 - **03 — model-route: economia ≈80%** de custo no mix de 6 prompts
   (varia ~65–80% conforme o mix) com **concordância 5/5 entre os pares
   roteados**; o 6/6 geral inclui 1 par em que o juiz escalou para o

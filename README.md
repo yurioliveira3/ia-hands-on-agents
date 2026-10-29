@@ -235,7 +235,7 @@ Siga na ordem; cada passo depende só do setup e do `.env`.
 | 4. Evals (bônus) | [demo-1/bonus_evals](demo-1/bonus_evals.ipynb) | suíte com gabarito: score por prompt | trocar uma âncora e comparar os dois scores |
 | 5. MCP | [demo-2](demo-2/roteiro-demo-2.md) | o dado criado, gravado e relido; o fetch soma um externo | subir no Claude Code/OpenCode e trocar a pergunta |
 | 6. Triagem tipada | [demo-3/01](demo-3/01_triagem_jev.ipynb) | uma chamada ao juiz, quatro decisões tipadas; placar 16/18 e a fila de revisão por threshold | mudar o threshold (0.9 → 0.5) e comparar a fila; traduzir as instruções |
-| 7. Agente com juiz | [demo-3/02](demo-3/02_agente_juiz.ipynb) | o laço do demo-1 com `Choice` na ação e `Noul` na resposta: aprovado, barrado e teto de passos | desligar os dois gates (`gate_tool=None`) e repetir o pedido destrutivo |
+| 7. Agente com juiz | [demo-3/02](demo-3/02_agente_juiz.ipynb) | o laço do demo-1 com `Choice` na ação e `Noul` na resposta: aprovado, barrado fora do laço e teto de passos | desligar os dois gates (`gate_tool=None`) e repetir o pedido destrutivo |
 | 8. Model-route | [demo-3/03](demo-3/03_model_route.ipynb) | o juiz roteia cada mensagem entre forte e mini; economia ≈80% com concordância | afrouxar os critérios do mini e medir economia x qualidade |
 
 Os índices citados são posições 0-based do DataFrame usado no notebook
@@ -256,8 +256,8 @@ do notebook registra o modelo usado):
 
 Na demo 3 (execução de referência de 2026-10-28, juiz no `-free`, que
 devolve `cost: 0`): triagem **16/18 (89%)** com **94% auto-decidable** no
-threshold 0.9; o agente com juiz roda 3 vezes (aprovado, barrado no gate
-e teto de passos); o model-route economiza **≈80%** com **5/5 de
+threshold 0.9; o agente com juiz roda 3 vezes (aprovado, barrado pelo juiz
+fora do laço e teto de passos); o model-route economiza **≈80%** com **5/5 de
 concordância entre os pares roteados** (6/6 no total, que inclui 1 par
 escalado forte×forte). São números de uma execução: reexecute para os
 seus.
