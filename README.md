@@ -12,6 +12,7 @@ dentro, com dados de verdade.
 |---|---|---|
 | [Demo 1](demo-1/) — da engenharia de prompt ao agente | 4 notebooks: zero-shot, few-shot, laço do agente à mão e evals | [01_zero_shot.ipynb](demo-1/01_zero_shot.ipynb) |
 | [Demo 2](demo-2/) — top-3 MCPs criando e lendo em destinos | roteiro guiado + prompts em 3 níveis: [simples](demo-2/prompts/prompt-simples.md), [médio](demo-2/prompts/prompt-medio.md) e [avançado](demo-2/prompts/prompt-avancado.md) | [roteiro-demo-2.md](demo-2/roteiro-demo-2.md) |
+| [Demo 3](demo-3/) — decisão calibrada com System One (Jev) | 3 notebooks: triagem tipada, agente com juiz e model-route | [01_triagem_jev.ipynb](demo-3/01_triagem_jev.ipynb) |
 
 Tese central: o modelo é uma peça substituível - trocar de provedor é
 editar três linhas do .env; a engenharia que permanece é prompt,
@@ -35,6 +36,11 @@ usa os nomes das nossas camadas):
 | Orquestração | ferramentas coordenadas por um catálogo padrão (MCP): filesystem, sqlite, fetch | [demo-2](demo-2/roteiro-demo-2.md) |
 | Armação (harness) | a CLI do agente que conecta tudo: Claude Code ou OpenCode, permissões, segredos | [demo-2/.mcp.json](demo-2/.mcp.json.example), [demo-2/opencode.json](demo-2/opencode.json.example), [.env](.env.example) |
 | Envelope (evals, custo) | como saber que funciona sem achar: suíte com gabarito e tokens por execução | [demo-1/bonus_evals](demo-1/bonus_evals.ipynb) |
+| O juiz (System One) | a decisão tipada com confiança, dentro do laço e no lugar do modelo caro | [demo-3](demo-3/README.md) |
+
+O juiz não ganha uma caixa nova no desenho: ele mora **dentro** do laço
+(camada 3) e do envelope (camada 5) — o mesmo protocolo de pergunta
+tipada decide a ação, o encaminhamento e a resposta.
 
 ### A lógica de dentro para fora
 
@@ -82,7 +88,7 @@ de custo.
 
 ```
 podcast-ia-hands-on/
-  Makefile                setup re-executavel: make setup/env/test/notebooks/evals/demo2-config
+  Makefile                setup re-executavel: make setup/env/test/notebooks/evals/demo2-config/demo3-run
                           clean remove os artefatos gerados
   pyproject.toml          dependencias declaradas (gerenciadas pelo uv)
   uv.lock                 lock das dependencias (instalacao reprodutivel)
@@ -101,6 +107,11 @@ podcast-ia-hands-on/
     opencode.json.example template equivalente para OpenCode
     roteiro-demo-2.md     passo a passo da demonstração ao vivo
     prompts/              o roteiro em 3 níveis: simples, medio e avancado
+  demo-3/                 Demo 3 - decisão calibrada com System One (Jev)
+    01_triagem_jev.ipynb  triagem tipada: uma chamada, quatro decisões
+    02_agente_juiz.ipynb  o laço do demo-1 com um juiz na ação e na resposta
+    03_model_route.ipynb  o juiz escolhendo qual modelo responde cada passo
+    README.md             números medidos, setup e limitações do Jev
 ```
 
 Todos os notebooks e arquivos citados estão linkados nas tabelas
@@ -121,6 +132,21 @@ Go são opções pagas.
 | Gemini | https://aistudio.google.com/api-keys | Sim: free tier com quota; veja https://ai.google.dev/gemini-api/docs/rate-limits |
 | OpenCode Go | https://opencode.ai/console | Não: o plano Go é pago (US$10/mês na data deste material); o modelo `-free` tem limite de uso |
 | OpenAI | https://platform.openai.com/api-keys | Não: a API é cobrada por token |
+
+O Jev (System One) da demo 3 é à parte: é **pay-as-you-go do console**
+(https://opencode.ai/console) e a assinatura Go/Go Plus não o inclui. O
+`jev-1.13-free` responde com `cost: 0`, mas tem quota diária e é tempo
+limitado; o fallback é `jev-1.13` (~US$0.042 por milhão de tokens de
+entrada, saída grátis), que exige créditos na conta. Para usar o Jev via
+OpenRouter, troque no `.env`:
+`JEV_BASE_URL=https://openrouter.ai/api/v1/systemone`,
+`JEV_MODEL=typesafe/jev-1.13` e `JEV_API_KEY=<sua chave OpenRouter>`
+(não há Jev free no OpenRouter; confira a oferta no dia).
+
+Os modelos de chat com sufixo `-free` do OpenCode são servidos pelo
+cliente OpenCode: fora dele, a mesma chamada costuma voltar 429 ou 400.
+Por isso o modelo "mini" do model-route (demo 3) é `glm-5.3-flash`, do
+plano Go pago.
 
 Tudo via `make`, com dependências gerenciadas pelo `uv` (Python 3.10+
 instalado automaticamente se necessário). Para instalar o `uv` (se não
@@ -184,6 +210,16 @@ tiver): `curl -LsSf https://astral.sh/uv/install.sh | sh`.
    do repo, inicie com `opencode --standalone` na pasta demo-2: o
    serviço compartilhado pode ficar ancorado na raiz e não carregar o
    `opencode.json` local.
+7. Para a demo 3: a mesma `LLM_API_KEY` serve (com `JEV_API_KEY` vazio,
+   o `jev.py` reusa a chave do chat); confira o caminho feliz do juiz e
+   depois rode os três notebooks de uma vez:
+   ```
+   make test-jev
+   make demo3-run
+   ```
+   O `make demo3-run` executa os notebooks e grava a saída em
+   `export/demo3/` (gitignored). Detalhes, números e alternativas de
+   acesso em [demo-3/README.md](demo-3/README.md).
 
 ## Passo a passo
 
@@ -198,6 +234,9 @@ Siga na ordem; cada passo depende só do setup e do `.env`.
 | 3. Agente à mão | [demo-1/03](demo-1/03_agent_loop.ipynb) | o laço decidir/agir/observar sem framework | perguntar outra coisa que use a terceira tool (Wikipedia) |
 | 4. Evals (bônus) | [demo-1/bonus_evals](demo-1/bonus_evals.ipynb) | suíte com gabarito: score por prompt | trocar uma âncora e comparar os dois scores |
 | 5. MCP | [demo-2](demo-2/roteiro-demo-2.md) | o dado criado, gravado e relido; o fetch soma um externo | subir no Claude Code/OpenCode e trocar a pergunta |
+| 6. Triagem tipada | [demo-3/01](demo-3/01_triagem_jev.ipynb) | uma chamada ao juiz, quatro decisões tipadas; placar 16/18 e a fila de revisão por threshold | mudar o threshold (0.9 → 0.5) e comparar a fila; traduzir as instruções |
+| 7. Agente com juiz | [demo-3/02](demo-3/02_agente_juiz.ipynb) | o laço do demo-1 com `Choice` na ação e `Noul` na resposta: aprovado, barrado e teto de passos | desligar os dois gates (`gate_tool=None`) e repetir o pedido destrutivo |
+| 8. Model-route | [demo-3/03](demo-3/03_model_route.ipynb) | o juiz roteia cada mensagem entre forte e mini; economia ≈80% com concordância | afrouxar os critérios do mini e medir economia x qualidade |
 
 Os índices citados são posições 0-based do DataFrame usado no notebook
 (`df.iloc`). No arquivo CSV, a linha física é o índice + 2 (por causa do
@@ -214,6 +253,14 @@ do notebook registra o modelo usado):
   pronta para rodar no seu modelo. É a lição central da camada 2.
 - suíte de evals: zero-shot 82%, few-shot 91% (11 casos); o índice 16
   segue errado nos dois.
+
+Na demo 3 (execução de referência de 2026-10-28, juiz no `-free`, que
+devolve `cost: 0`): triagem **16/18 (89%)** com **94% auto-decidable** no
+threshold 0.9; o agente com juiz roda 3 vezes (aprovado, barrado no gate
+e teto de passos); o model-route economiza **≈80%** com **5/5 de
+concordância entre os pares roteados** (6/6 no total, que inclui 1 par
+escalado forte×forte). São números de uma execução: reexecute para os
+seus.
 
 ## Dicas de execução
 
@@ -243,6 +290,9 @@ do notebook registra o modelo usado):
    padroniza a parte chata - inclusive o teste de integração.
 5. Evals: como saber que funciona sem achismo? Rode a suíte: o TDD do
    mundo não-determinístico.
+6. O juiz: quando a pergunta é fechada, o modelo mede e o código
+   decide. Confiança acoplada à resposta transforma "acertou?" em
+   "quanto custa cada erro?" — e deixa o modelo caro só onde ele paga.
 
 ## Referências
 
@@ -255,6 +305,12 @@ do notebook registra o modelo usado):
 - OpenAI. **Function calling.**
   https://developers.openai.com/api/docs/guides/function-calling
   Referência para declarar ferramentas com JSON Schema e devolver o resultado ao modelo.
+- Typesafe. **Documentação do Jev / System One.**
+  https://docs.typesafe.ai
+  Protocolo das perguntas tipadas (`choice`, `score`, `noul`) usadas na demo 3.
+- OpenCode. **Console e modelos.**
+  https://opencode.ai/console
+  Onde criar a chave, ver a oferta do plano Go e a lista de modelos disponíveis.
 
 ## Licença
 
