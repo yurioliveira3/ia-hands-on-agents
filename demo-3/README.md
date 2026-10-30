@@ -67,9 +67,9 @@ variam com o modelo — o output registra qual foi usado.
   `gate_tool` barrar a ferramenta que resolveria a pergunta. O laço gastou
   7.474 tokens e o juiz 6.821 de entrada (163% do prompt do laço) em 9
   chamadas — o freio não é de graça, mas aqui custou `US$ 0.000000`.
-- **03 — model-route: economia ≈80%** de custo no mix de 6 prompts da
-  execução de referência (2026-10-28); a versão afrouxada rendeu ≈84%. O
-  número varia com o mix e com o preço do par de modelos. A concordância
+- **03 — model-route: economia ≈79% estrito / ≈87% afrouxado** de custo no
+  mix de 6 prompts da execução de referência (2026-10-30). O número varia
+  com o mix e com o preço do par de modelos. A concordância
   é **5/5 entre os pares roteados**; o 6/6 geral inclui 1 par em que o
   juiz escalou para o forte×forte. O mini respondeu 5/6, e os gates de
   rota mais o juiz de concordância custaram 0. É uma execução de
