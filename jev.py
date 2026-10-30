@@ -8,10 +8,11 @@ from dataclasses import dataclass
 
 import requests
 
-# Importar de llm já executa o loader único do .env e entrega os mesmos
-# headers da demo: o User-Agent próprio evita o bloqueio 1010 do
-# Cloudflare, que rejeita o User-Agent de biblioteca.
-from llm import _DEFAULT_HEADERS, _env
+# Importar de llm já executa o loader único do .env e entrega a mesma
+# regra de headers da demo: o User-Agent próprio (e o session id) só vão
+# para o endpoint do OpenCode, via _headers(base_url) — é o UA próprio
+# que evita o bloqueio 1010 do Cloudflare, que rejeita o UA de biblioteca.
+from llm import _env, _headers
 
 # SPEC_DEVIATION: .env local sem JEV_* (arquivo do usuário intocado); fallback = defaults do .env.example
 # Razão: o fallback garante o make test-jev sem editar o .env do usuário.
@@ -115,12 +116,13 @@ def system_one(
         "state": state,
         "questions": {nome: pergunta.wire() for nome, pergunta in questions.items()},
     }
+    base_url = _env("JEV_BASE_URL") or _DEFAULT_BASE_URL
     for attempt in range(4):
         try:
             resposta = requests.post(
-                _env("JEV_BASE_URL") or _DEFAULT_BASE_URL,
+                base_url,
                 json=corpo,
-                headers={"Authorization": f"Bearer {api_key}", **_DEFAULT_HEADERS},
+                headers={"Authorization": f"Bearer {api_key}", **_headers(base_url)},
                 timeout=60,
             )
         except requests.RequestException as exc:
