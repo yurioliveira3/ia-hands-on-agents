@@ -11,7 +11,7 @@ o modelo mede, o código decide. O mapa completo das camadas está no
 |---|---|
 | [01_triagem_jev.ipynb](01_triagem_jev.ipynb) | uma chamada, 4 perguntas por reclamação (categoria, irritação, urgência, dados faltando); placar 16/18 e a fila de revisão definida por threshold |
 | [02_agente_juiz.ipynb](02_agente_juiz.ipynb) | o laço do demo-1 com o juiz nos dois pontos de decisão: `Choice` na ação e `Noul` na resposta; 3 execuções |
-| [03_model_route.ipynb](03_model_route.ipynb) | o juiz rotulando cada mensagem e a regra de confiança decidindo quem responde; economia ≈80% com concordância 5/5 entre os pares roteados |
+| [03_model_route.ipynb](03_model_route.ipynb) | o juiz rotulando cada mensagem e a regra de confiança decidindo quem responde; economia ≈79% estrito / ≈87% afrouxado, com concordância 5/5 nos passos do mini |
 
 ## Antes de rodar
 
@@ -41,10 +41,11 @@ Variáveis do juiz no `.env` (os defaults do `jev.py` já apontam para o
 
 ## O que você vai ver
 
-Os números abaixo vêm do output salvo nos notebooks. A execução de
-referência é de **2026-10-28**, com `jev-1.13-free` no juiz,
-`deepseek-v4.1-flash` como forte e `glm-5.3-flash` como mini; os seus
-variam com o modelo — o output registra qual foi usado.
+Os números abaixo vêm do output salvo nos notebooks. **01 e 02** vêm da
+execução de referência de **2026-10-28** e **03** da de **2026-10-30**,
+com `jev-1.13-free` no juiz, `deepseek-v4.1-flash` como forte e
+`glm-5.3-flash` como mini; os seus variam com o modelo — o output
+registra qual foi usado.
 
 - **01 — triagem: 16/18 (89%)** contra o gabarito do CSV, sem prompt e
   sem exemplos. Os erros caem nas armadilhas multimotivo do demo-1
@@ -70,8 +71,9 @@ variam com o modelo — o output registra qual foi usado.
 - **03 — model-route: economia ≈79% estrito / ≈87% afrouxado** de custo no
   mix de 6 prompts da execução de referência (2026-10-30). O número varia
   com o mix e com o preço do par de modelos. A concordância
-  é **5/5 entre os pares roteados**; o 6/6 geral inclui 1 par em que o
-  juiz escalou para o forte×forte. O mini respondeu 5/6, e os gates de
+  é **5/5 nos passos do mini** (o 6º par foi escalado pela regra de
+  confiança e aparece marcado à parte); o 6/6 geral inclui esse par
+  forte×forte. O mini respondeu 5/6, e os gates de
   rota mais o juiz de concordância custaram 0. É uma execução de
   referência: reexecute para os seus números.
 - **Jagged edge do `score`:** o comportamento do upstream varia entre
@@ -96,8 +98,16 @@ variam com o modelo — o output registra qual foi usado.
   entrada e US$0.50/M de saída no console em 2026-10-28).
 - **Alternativa: Jev via OpenRouter.** Troque no `.env`:
   `JEV_BASE_URL=https://openrouter.ai/api/v1/systemone`,
-  `JEV_MODEL=typesafe/jev-1.13` e `JEV_API_KEY=<sua chave OpenRouter>`.
+  `JEV_MODEL=typesafe/jev-1.13` (ou `typesafe/jev-1.14`, se o catálogo
+  atual já o listar) e `JEV_API_KEY=<sua chave OpenRouter>`.
   Não há Jev free no OpenRouter: confira preço e disponibilidade no dia.
+- **Alternativa open-source: Laya** (Apache 2.0, ConvAI Innovations).
+  `pip install "laya[serve]"` e `laya-serve` expõem o mesmo
+  `POST /v1/systemone`; aponte `JEV_BASE_URL=http://127.0.0.1:8000/v1/systemone`,
+  `JEV_MODEL=laya-typed-decisions` e `JEV_API_KEY=local`. A fiação é a mesma,
+  mas os números passam a ser da Laya — use para validar o mecanismo, não para
+  substituir a execução de referência do Jev. Ela roda local (MPS/CPU) e pede
+  ~2–4 GB de RAM.
 
 ## Dicas desta pasta
 

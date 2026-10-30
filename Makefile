@@ -8,7 +8,7 @@ env:
 		echo ".env ja existe (nao sobrescrevo)"; \
 	else \
 		cp .env.example .env; \
-		echo ".env criado a partir de .env.example - preencha LLM_API_KEY, LLM_MODEL e LLM_BASE_URL"; \
+		echo ".env criado a partir de .env.example - preencha as variaveis do .env (LLM_* para o chat e JEV_* para o juiz; JEV_API_KEY vazio reusa LLM_API_KEY)"; \
 	fi
 
 test: env

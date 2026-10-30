@@ -88,7 +88,7 @@ de custo.
 
 ```
 ia-hands-on-agents/
-  Makefile                setup re-executavel: make setup/env/test/notebooks/evals/demo2-config/demo3-run
+  Makefile                setup re-executavel: make setup/env/test/test-jev/notebooks/evals/demo2-config/demo3-run
                           clean remove os artefatos gerados
   pyproject.toml          dependencias declaradas (gerenciadas pelo uv)
   uv.lock                 lock das dependencias (instalacao reprodutivel)
@@ -130,7 +130,7 @@ Go são opções pagas.
 |---|---|---|
 | OpenRouter | https://openrouter.ai/settings/keys | Sim: modelos com sufixo `:free`, sujeitos a rate limit |
 | Gemini | https://aistudio.google.com/api-keys | Sim: free tier com quota; veja https://ai.google.dev/gemini-api/docs/rate-limits |
-| OpenCode Go | https://opencode.ai/console | Não: o plano Go é pago (US$10/mês na data deste material); o modelo `-free` tem limite de uso |
+| OpenCode Go | https://opencode.ai/console | Não: o plano Go é pago (US$10/mês na data deste material); modelos de chat `-free` só no cliente OpenCode; fora dele, 429/400 |
 | OpenAI | https://platform.openai.com/api-keys | Não: a API é cobrada por token |
 
 O Jev (System One) da demo 3 é à parte: é **pay-as-you-go do console**
@@ -140,7 +140,8 @@ limitado; o fallback é `jev-1.13` (~US$0.042 por milhão de tokens de
 entrada, saída grátis), que exige créditos na conta. Para usar o Jev via
 OpenRouter, troque no `.env`:
 `JEV_BASE_URL=https://openrouter.ai/api/v1/systemone`,
-`JEV_MODEL=typesafe/jev-1.13` e `JEV_API_KEY=<sua chave OpenRouter>`
+`JEV_MODEL=typesafe/jev-1.13` (ou `typesafe/jev-1.14`, se o catálogo
+atual já o listar) e `JEV_API_KEY=<sua chave OpenRouter>`
 (não há Jev free no OpenRouter; confira a oferta no dia).
 
 Os modelos de chat com sufixo `-free` do OpenCode são servidos pelo
@@ -246,7 +247,7 @@ Siga na ordem; cada passo depende só do setup e do `.env`.
 | 5. MCP | [demo-2](demo-2/roteiro-demo-2.md) | o dado criado, gravado e relido; o fetch soma um externo | subir no Claude Code/OpenCode e trocar a pergunta |
 | 6. Triagem tipada | [demo-3/01](demo-3/01_triagem_jev.ipynb) | uma chamada ao juiz, quatro decisões tipadas; placar 16/18 e a fila de revisão por threshold | mudar o threshold (0.9 → 0.5) e comparar a fila; traduzir as instruções |
 | 7. Agente com juiz | [demo-3/02](demo-3/02_agente_juiz.ipynb) | o laço do demo-1 com `Choice` na ação e `Noul` na resposta: aprovado, barrado fora do laço e teto de passos | desligar os dois gates (`gate_tool=None`) e repetir o pedido destrutivo |
-| 8. Model-route | [demo-3/03](demo-3/03_model_route.ipynb) | o juiz rotula cada mensagem e a regra de confiança decide entre forte e mini; economia ≈80% com concordância | afrouxar os critérios do mini e medir economia x qualidade |
+| 8. Model-route | [demo-3/03](demo-3/03_model_route.ipynb) | o juiz rotula cada mensagem e a regra de confiança decide entre forte e mini; economia ≈79% estrito / ≈87% afrouxado, concordância 5/5 nos passos do mini | afrouxar os critérios do mini e medir economia x qualidade |
 
 Os índices citados são posições 0-based do DataFrame usado no notebook
 (`df.iloc`). No arquivo CSV, a linha física é o índice + 2 (por causa do
@@ -264,11 +265,12 @@ do notebook registra o modelo usado):
 - suíte de evals: zero-shot 82%, few-shot 91% (11 casos); o índice 16
   segue errado nos dois.
 
-Na demo 3 (execução de referência de 2026-10-28, juiz no `-free`, que
-devolve `cost: 0`): triagem **16/18 (89%)** com **94% auto-decidable** no
+Na demo 3: **01 e 02** vêm da execução de referência de **2026-10-28** e
+**03** da de **2026-10-30** (juiz no `-free`, que devolve `cost: 0`).
+Triagem **16/18 (89%)** com **94% auto-decidable** no
 threshold 0.9; o agente com juiz roda 3 vezes (aprovado, barrado pelo juiz
-fora do laço e teto de passos); o model-route economiza **≈80%** com **5/5 de
-concordância entre os pares roteados** (6/6 no total, que inclui 1 par
+fora do laço e teto de passos); o model-route economiza **≈79% estrito /
+≈87% afrouxado** com **5/5 nos passos do mini** (6/6 no total inclui 1 par
 escalado forte×forte). São números de uma execução: reexecute para os
 seus.
 
