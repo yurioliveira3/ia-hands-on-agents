@@ -1,4 +1,4 @@
-.PHONY: setup env test notebooks evals demo2-setup demo2-config clean
+.PHONY: setup env test test-jev notebooks evals demo3-run demo2-setup demo2-config clean
 
 setup:
 	uv sync --locked
@@ -8,11 +8,14 @@ env:
 		echo ".env ja existe (nao sobrescrevo)"; \
 	else \
 		cp .env.example .env; \
-		echo ".env criado a partir de .env.example - preencha LLM_API_KEY, LLM_MODEL e LLM_BASE_URL"; \
+		echo ".env criado a partir de .env.example - preencha as variaveis do .env (LLM_* para o chat e JEV_* para o juiz; JEV_API_KEY vazio reusa LLM_API_KEY)"; \
 	fi
 
 test: env
 	uv run --locked --env-file .env python -c "from llm import chat; print(chat([{'role': 'user', 'content': 'diga ok'}]))"
+
+test-jev: env
+	uv run --locked --env-file .env python -c "from jev import system_one, Noul; r = system_one('Cobraram o frete duas vezes na minha fatura do cartão', {'cobranca_duplicada': Noul('Esta reclamação fala de cobrança em duplicidade?')}); print(r); assert 0.0 <= r['cobranca_duplicada']['valor'] <= 1.0"
 
 notebooks: env
 	uv run --locked --env-file .env jupyter lab
@@ -20,6 +23,9 @@ notebooks: env
 evals: env
 	uv run --locked --env-file .env jupyter nbconvert --to notebook --execute demo-1/bonus_evals.ipynb --output-dir export
 	@echo "notebook executado em export/bonus_evals.ipynb"
+
+demo3-run: env
+	uv run --locked --env-file .env jupyter nbconvert --to notebook --execute demo-3/01_triagem_jev.ipynb demo-3/02_agente_juiz.ipynb demo-3/03_model_route.ipynb --output-dir export/demo3
 
 demo2-setup:
 	uv tool install --reinstall mcp-server-fetch
